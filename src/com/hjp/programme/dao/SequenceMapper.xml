@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.hjp.programme.mapper.SequenceMapper" >
+
+  <select id="nextval" resultType="java.lang.Long" parameterType="java.lang.String" >
+  	select nextval(#{name,jdbcType=VARCHAR})
+  </select>
+  
+  <select id="currval" resultType="java.lang.Long" parameterType="java.lang.String" >
+  	select currval(#{name,jdbcType=VARCHAR})
+  </select>
+  
+  <select id="setval" resultType="java.lang.Long" parameterType="java.lang.String" >
+  	select setval(#{name,jdbcType=VARCHAR}, #{currentVal,jdbcType=Long})
+  </select>
+  
+  <select id="getSysDate" resultType="java.lang.String" >
+  	select date_format(now(),'%Y%m%d');
+  </select>
+  
+  <select id="getSysDateFormt" resultType="java.lang.String" >
+  	select date_format(now(),'%Y-%m-%d');
+  </select>
+  
+  <select id="getSysDateTimestamp" resultType="java.sql.Timestamp" >
+  	select now()
+  </select>
+
+</mapper>

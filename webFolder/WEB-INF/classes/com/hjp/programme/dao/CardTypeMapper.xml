@@ -1,0 +1,62 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.hjp.programme.mapper.CardTypeMapper" >
+	<resultMap id="CardTypeMap" type="com.hjp.programme.vo.CardType" >
+    	<result column="CARD_TYPE_CODE" property="cardTypeCode" jdbcType="VARCHAR"/>
+    	<result column="MERCHANT_ID" property="merchantId" jdbcType="VARCHAR"/>
+    	<result column="STATE" property="state" jdbcType="VARCHAR"/>
+    	<result column="CARD_TYPE_NAME" property="cardTypeName" jdbcType="VARCHAR"/>
+    	<result column="CARD_NUMBER" property="cardNumber" jdbcType="VARCHAR"/>
+    	<result column="STATE_NAME" property="stateName" jdbcType="VARCHAR"/>
+    </resultMap>
+    
+    <insert id="insertCardType" parameterType="com.hjp.programme.vo.CardType">
+    	insert into TD_M_CARD_TYPE
+    	<trim prefix="(" suffix=")" suffixOverrides="," >
+		    <if test="cardTypeCode != null" >
+		        CARD_TYPE_CODE,
+		    </if>
+		    <if test="merchantId != null" >
+		        MERCHANT_ID,
+		    </if>
+		    <if test="state != null" >
+		        STATE,
+		    </if>
+		    <if test="cardTypeName != null" >
+		        CARD_TYPE_NAME,
+		    </if>
+		</trim>
+	    <trim prefix="values (" suffix=")" suffixOverrides="," >
+	      	<if test="cardTypeCode != null" >
+	        	#{cardTypeCode,jdbcType=VARCHAR},
+	      	</if>
+	      	<if test="merchantId != null" >
+	        	#{merchantId,jdbcType=VARCHAR},
+	      	</if>
+	      	<if test="state != null" >
+	        	#{state,jdbcType=VARCHAR},
+	      	</if>
+	      	<if test="cardTypeName != null" >
+	        	#{cardTypeName,jdbcType=VARCHAR},
+	      	</if>
+	     </trim>
+    </insert>
+    
+    <select id="queryCardTypeNumber" resultMap="CardTypeMap" parameterType="page">
+  		SELECT ct.CARD_TYPE_CODE, ct.CARD_TYPE_NAME, ct.MERCHANT_ID, ct.STATE, IFNULL(t.CARD_NUMBER, 0) CARD_NUMBER,
+		CASE ct.STATE
+		WHEN '0' THEN '失效'
+		ELSE '有效' END STATE_NAME
+		FROM td_m_card_type ct LEFT JOIN (SELECT COUNT(mc.CARD_TYPE_CODE) CARD_NUMBER, mc.CARD_TYPE_CODE
+																	FROM tf_f_member_card mc
+																	GROUP BY mc.CARD_TYPE_CODE) t ON t.CARD_TYPE_CODE = ct.CARD_TYPE_CODE
+		WHERE ct.MERCHANT_ID = #{t.merchantId,jdbcType=VARCHAR}
+  	</select>
+    
+    <select id="queryCardType" resultMap="CardTypeMap" parameterType="java.lang.String">
+    	SELECT ct.CARD_TYPE_CODE, ct.CARD_TYPE_NAME, ct.MERCHANT_ID, ct.STATE
+    	FROM td_m_card_type ct
+    	WHERE ct.MERCHANT_ID = #{merchantId,jdbcType=VARCHAR}
+    </select>
+    
+</mapper>

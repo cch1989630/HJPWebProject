@@ -1,0 +1,172 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.hjp.programme.mapper.MemberCardMapper" >
+	<resultMap id="MemberCardMap" type="com.hjp.programme.vo.MemberCard" >
+    	<result column="CARD_ID" property="cardId" jdbcType="VARCHAR"/>
+    	<result column="HODE_CARD_NAME" property="hodeCardName" jdbcType="VARCHAR"/>
+    	<result column="CARD_TYPE_CODE" property="cardTypeCode" jdbcType="VARCHAR"/>
+    	<result column="HODE_CARD_PHONE" property="hodeCardPhone" jdbcType="VARCHAR"/>
+    	<result column="CARD_BALANCE" property="cardBalance" jdbcType="DECIMAL"/>
+    	<result column="STATE" property="state" jdbcType="VARCHAR"/>
+    	<result column="CREATE_TIME" property="createTime" jdbcType="TIMESTAMP"/>
+    	<result column="MERCHANT_ID" property="merchantId" jdbcType="VARCHAR"/>
+    	<result column="COST" property="cost" jdbcType="DECIMAL"/>
+    	<result column="COST_CARD_BALANCE" property="costCardBalance" jdbcType="DECIMAL"/>
+    	<result column="CARD_TYPE_NAME" property="cardTypeName" jdbcType="VARCHAR"/>
+    	<result column="COST_TIME" property="costTime" jdbcType="TIMESTAMP"/>
+    	<result column="MERCHANT_NAME" property="merchantName" jdbcType="VARCHAR"/>
+    	<result column="STAFF_NAME" property="staffName" jdbcType="VARCHAR"/>
+    	<result column="TRADE_STAFF_ID" property="tradeStaffId" jdbcType="VARCHAR"/>
+    	<result column="COST_ID" property="costId" jdbcType="VARCHAR"/>
+    	<result column="EDIT_STAFF_ID" property="editStaffId" jdbcType="VARCHAR"/>
+    	<result column="EDIT_STAFF_NAME" property="editStaffName" jdbcType="VARCHAR"/>
+    	<result column="EDIT_TIME" property="editTime" jdbcType="TIMESTAMP"/>
+    </resultMap>
+    
+    <insert id="insertMemberCard" parameterType="com.hjp.programme.vo.MemberCard">
+    	insert into TF_F_MEMBER_CARD
+    	<trim prefix="(" suffix=")" suffixOverrides="," >
+		    <if test="cardId != null" >
+		        CARD_ID,
+		    </if>
+		    <if test="hodeCardName != null" >
+		        HODE_CARD_NAME,
+		    </if>
+		    <if test="cardTypeCode != null" >
+		        CARD_TYPE_CODE,
+		    </if>
+		    <if test="hodeCardPhone != null" >
+		        HODE_CARD_PHONE,
+		    </if>
+		    <if test="cardBalance != null" >
+		        CARD_BALANCE,
+		    </if>
+		    <if test="state != null" >
+		        STATE,
+		    </if>
+		    <if test="createTime != null" >
+		        CREATE_TIME,
+		    </if>
+		    <if test="merchantId != null" >
+		        MERCHANT_ID,
+		    </if>
+		</trim>
+	    <trim prefix="values (" suffix=")" suffixOverrides="," >
+	      	<if test="cardId != null" >
+	        	#{cardId,jdbcType=VARCHAR},
+	      	</if>
+	      	<if test="hodeCardName != null" >
+	        	#{hodeCardName,jdbcType=VARCHAR},
+	      	</if>
+	      	<if test="cardTypeCode != null" >
+	        	#{cardTypeCode,jdbcType=VARCHAR},
+	      	</if>
+	      	<if test="hodeCardPhone != null" >
+	        	#{hodeCardPhone,jdbcType=VARCHAR},
+	      	</if>
+	      	<if test="cardBalance != null" >
+	        	#{cardBalance,jdbcType=DECIMAL},
+	      	</if>
+	      	<if test="state != null" >
+	        	#{state,jdbcType=VARCHAR},
+	      	</if>
+	      	<if test="createTime != null" >
+	        	#{createTime,jdbcType=TIMESTAMP},
+	      	</if>
+	      	<if test="merchantId != null" >
+	        	#{merchantId,jdbcType=VARCHAR},
+	      	</if>
+	     </trim>
+    </insert>
+    
+    <select id="queryMemberCardBalanceByPage" resultMap="MemberCardMap" parameterType="page">
+    	SELECT mc.CARD_ID, mc.HODE_CARD_NAME, mc.CARD_TYPE_CODE, mc.CARD_BALANCE, bb.COST, bb.COST_TIME, ct.CARD_TYPE_NAME,
+    	mc.CREATE_TIME, mi.MERCHANT_NAME, ms.STAFF_NAME, bb.TRADE_STAFF_ID, mc.HODE_CARD_PHONE,bb.CARD_BALANCE COST_CARD_BALANCE,
+    	bb.COST_ID, bb.EDIT_STAFF_ID, tms.STAFF_NAME EDIT_STAFF_NAME, bb.EDIT_TIME
+		FROM tf_f_member_card mc, tf_b_balance bb LEFT JOIN tf_m_staff tms ON bb.EDIT_STAFF_ID = tms.STAFF_ID, td_m_card_type ct, td_m_merchant_info mi, tf_m_staff ms
+		WHERE mc.CARD_ID = bb.CARD_ID
+		AND mc.CARD_TYPE_CODE = ct.CARD_TYPE_CODE
+		AND bb.CHILD_MERCHANT_ID = mi.MERCHANT_ID
+		AND bb.TRADE_STAFF_ID = ms.STAFF_ID
+		<if test="t.cardBalanceBegin != null" >
+			<![CDATA[
+			and mc.CARD_BALANCE >= #{t.cardBalanceBegin,jdbcType=VARCHAR}
+			]]>
+		</if>
+		<if test="t.cardBalanceEnd != null" >
+			<![CDATA[
+			and mc.CARD_BALANCE <= #{t.cardBalanceEnd,jdbcType=VARCHAR}
+			]]>
+		</if>
+		<if test="t.costMerchantId != null" >
+			and bb.CHILD_MERCHANT_ID = #{t.costMerchantId,jdbcType=VARCHAR}
+		</if>
+		<if test="t.openBeginTime != null" >
+			<![CDATA[
+			AND mc.CREATE_TIME >= DATE_FORMAT(#{t.openBeginTime,jdbcType=VARCHAR},'%Y-%m-%d %H:%i:%s')
+			]]>
+		</if>
+		<if test="t.openEndTime != null" >
+			<![CDATA[
+			AND mc.CREATE_TIME >= DATE_FORMAT(#{t.openEndTime,jdbcType=VARCHAR},'%Y-%m-%d %H:%i:%s')
+			]]>
+		</if>
+		<if test="t.beginTime != null" >
+			<![CDATA[
+			AND bb.COST_TIME >= DATE_FORMAT(#{t.beginTime,jdbcType=VARCHAR},'%Y-%m-%d %H:%i:%s')
+			]]>
+		</if>
+		<if test="t.endTime != null" >
+			<![CDATA[
+			AND bb.COST_TIME <= DATE_FORMAT(#{t.endTime,jdbcType=VARCHAR},'%Y-%m-%d %H:%i:%s')
+			]]>
+		</if>
+		<if test="t.costTime != null" >
+			<![CDATA[
+			AND (DATE_FORMAT(bb.COST_TIME,'%Y-%m-%d') = DATE_FORMAT(#{t.costTime,jdbcType=VARCHAR},'%Y-%m-%d'))
+			]]>
+		</if>
+		<if test="t.cost != null" >
+			AND bb.COST = #{t.cost,jdbcType=VARCHAR}
+		</if>
+		<if test="t.isMonth != null" >
+			AND bb.IS_MONTH = #{t.isMonth,jdbcType=VARCHAR}
+		</if>
+		<if test="t.cardId != null" >
+			AND mc.CARD_ID = #{t.cardId,jdbcType=VARCHAR}
+		</if>
+		<if test="t.cardTypeCode != null" >
+			AND mc.CARD_TYPE_CODE = #{t.cardTypeCode,jdbcType=VARCHAR}
+		</if>
+		<if test="t.hodeCardName != null" >
+			AND mc.HODE_CARD_NAME like %#{t.hodeCardName,jdbcType=VARCHAR}%
+		</if>
+		<if test="t.openTime != null" >
+			<![CDATA[
+			AND (DATE_FORMAT(mc.CREATE_TIME,'%Y-%m-%d') = DATE_FORMAT(#{t.openTime,jdbcType=VARCHAR},'%Y-%m-%d'))
+			]]>
+		</if>
+    </select>
+    
+    <select id="queryMemberCardInfo" resultMap="MemberCardMap" parameterType="java.lang.String">
+    	SELECT t.CARD_ID, t.CARD_BALANCE, t.CARD_TYPE_CODE, t.CREATE_TIME, t.HODE_CARD_NAME, t.HODE_CARD_PHONE, t.MERCHANT_ID
+		FROM tf_f_member_card t
+		WHERE t.CARD_ID = #{cardId,jdbcType=VARCHAR}
+    </select>
+    
+    <select id="queryMemberCardInfoByPage" resultMap="MemberCardMap" parameterType="page">
+    	SELECT mc.CARD_ID, mc.CARD_BALANCE, mc.CARD_TYPE_CODE, mc.CREATE_TIME, mc.HODE_CARD_NAME, mc.HODE_CARD_PHONE, mc.MERCHANT_ID,
+			ct.CARD_TYPE_NAME
+		FROM tf_f_member_card mc, td_m_card_type ct
+		WHERE mc.CARD_TYPE_CODE = ct.CARD_TYPE_CODE
+		<if test="t.cardTypeCode != null" >
+			AND mc.CARD_TYPE_CODE = #{t.cardTypeCode,jdbcType=VARCHAR}
+		</if>
+    </select>
+    
+    <update id="updateMemberCardByCost" parameterType="com.hjp.programme.vo.MemberCard">
+    	UPDATE tf_f_member_card SET CARD_BALANCE = CARD_BALANCE - #{cardBalance,jdbcType=DECIMAL} 
+    	WHERE CARD_ID = #{cardId,jdbcType=VARCHAR}
+    </update>
+    
+</mapper>

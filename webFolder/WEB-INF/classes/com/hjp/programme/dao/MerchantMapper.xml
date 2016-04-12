@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.hjp.programme.mapper.MerchantMapper" >
+	<resultMap id="MerchantInfoMap" type="com.hjp.programme.vo.MerchantInfo" >
+    	<result column="MERCHANT_ID" property="merchantId" jdbcType="VARCHAR"/>
+    	<result column="MERCHANT_NAME" property="merchantName" jdbcType="VARCHAR"/>
+    	<result column="STATE" property="state" jdbcType="VARCHAR"/>
+    </resultMap>
+    
+    <select id="queryMerchantInfo" resultMap="MerchantInfoMap" parameterType="java.lang.String">
+    	SELECT MERCHANT_ID, MERCHANT_NAME
+		FROM td_m_merchant_info 
+    </select>
+    
+</mapper>

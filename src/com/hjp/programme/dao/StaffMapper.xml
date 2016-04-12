@@ -1,0 +1,120 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.hjp.programme.mapper.StaffMapper" >
+	<resultMap id="StaffMap" type="com.hjp.programme.vo.Staff" >
+    	<result column="STAFF_ID" property="staffId" jdbcType="VARCHAR"/>
+    	<result column="STAFF_NAME" property="staffName" jdbcType="VARCHAR"/>
+    	<result column="PASSWORD" property="password" jdbcType="VARCHAR"/>
+    	<result column="CHILD_MERCHANT_ID" property="childMerchantId" jdbcType="VARCHAR"/>
+    	<result column="MERCHANT_ID" property="merchantId" jdbcType="VARCHAR"/>
+    	<result column="MERCHANT_NAME" property="merchantName" jdbcType="VARCHAR"/>
+    	<result column="CLEAR_PASSWORD" property="clearPassword" jdbcType="VARCHAR"/>
+    	<result column="CREATE_TIME" property="createTime" jdbcType="TIMESTAMP"/>
+    </resultMap>
+    
+    <resultMap id="StaffRoleMap" type="com.hjp.programme.vo.StaffRole" >
+    	<result column="STAFF_ID" property="staffId" jdbcType="VARCHAR"/>
+    	<result column="ROLE_CODE" property="roleCode" jdbcType="VARCHAR"/>
+    </resultMap>
+    
+    <insert id="insertStaff" parameterType="com.hjp.programme.vo.Staff">
+    	insert into TF_M_STAFF
+    	<trim prefix="(" suffix=")" suffixOverrides="," >
+		    <if test="staffId != null" >
+		        STAFF_ID,
+		    </if>
+		    <if test="staffName != null" >
+		        STAFF_NAME,
+		    </if>
+		    <if test="password != null" >
+		        PASSWORD,
+		    </if>
+		    <if test="childMerchantId != null" >
+		        CHILD_MERCHANT_ID,
+		    </if>
+		    <if test="merchantId != null" >
+		        MERCHANT_ID,
+		    </if>
+		    <if test="createTime != null" >
+		        CREATE_TIME,
+		    </if>
+		    <if test="clearPassword != null" >
+		        CLEAR_PASSWORD,
+		    </if>
+		</trim>
+	    <trim prefix="values (" suffix=")" suffixOverrides="," >
+	      	<if test="staffId != null" >
+	        	#{staffId,jdbcType=VARCHAR},
+	      	</if>
+	      	<if test="staffName != null" >
+	        	#{staffName,jdbcType=VARCHAR},
+	      	</if>
+	      	<if test="password != null" >
+	        	#{password,jdbcType=VARCHAR},
+	      	</if>
+	      	<if test="childMerchantId != null" >
+	        	#{childMerchantId,jdbcType=VARCHAR},
+	      	</if>
+	      	<if test="merchantId != null" >
+	        	#{merchantId,jdbcType=DECIMAL},
+	      	</if>
+	      	<if test="createTime != null" >
+	        	#{createTime,jdbcType=TIMESTAMP},
+	      	</if>
+	      	<if test="clearPassword != null" >
+	        	#{clearPassword,jdbcType=VARCHAR},
+	      	</if>
+	     </trim>
+    </insert>
+    
+    <insert id="insertStaffRole" parameterType="com.hjp.programme.vo.StaffRole">
+    	insert into TF_M_STAFF_ROLE
+    	<trim prefix="(" suffix=")" suffixOverrides="," >
+		    <if test="staffId != null" >
+		        STAFF_ID,
+		    </if>
+		    <if test="roleCode != null" >
+		        ROLE_CODE,
+		    </if>
+		</trim>
+	    <trim prefix="values (" suffix=")" suffixOverrides="," >
+	      	<if test="staffId != null" >
+	        	#{staffId,jdbcType=VARCHAR},
+	      	</if>
+	      	<if test="roleCode != null" >
+	        	#{roleCode,jdbcType=VARCHAR},
+	      	</if>
+    	</trim>
+    </insert>
+    
+    <select id="queryStaffByStaffId" resultMap="StaffMap" parameterType="java.lang.String">
+  		select ms.STAFF_ID, ms.PASSWORD, ms.CHILD_MERCHANT_ID, ms.MERCHANT_ID, ms.STAFF_NAME, mi.MERCHANT_NAME, ms.CLEAR_PASSWORD
+    		from TF_M_STAFF ms, TD_M_MERCHANT_INFO mi 
+    	where STAFF_ID = #{staffId,jdbcType=VARCHAR}
+    	and ms.CHILD_MERCHANT_ID = mi.MERCHANT_ID
+  	</select>
+  	
+  	<select id="queryStaffByPage" resultMap="StaffMap" parameterType="page">
+  		select ms.STAFF_ID, ms.PASSWORD, ms.CHILD_MERCHANT_ID, ms.MERCHANT_ID, ms.STAFF_NAME, mi.MERCHANT_NAME, ms.CLEAR_PASSWORD,
+  			ms.CREATE_TIME
+    		from TF_M_STAFF ms, TD_M_MERCHANT_INFO mi 
+    	where ms.CHILD_MERCHANT_ID = mi.MERCHANT_ID
+    	<if test="t.merchantId != null" >
+    		and mi.MERCHANT_ID = #{t.merchantId,jdbcType=DECIMAL}
+    	</if>
+    	<if test="t.queryStaffId != null" >
+    		and ms.STAFF_ID like '%${t.queryStaffId}%'
+    	</if>
+  	</select>
+  	
+  	<select id="queryStaffRole" resultMap="StaffRoleMap" parameterType="java.lang.String" >
+    	select STAFF_ID, ROLE_CODE
+    		from TF_M_STAFF_ROLE
+    	where STAFF_ID = #{staffId,jdbcType=VARCHAR}
+  	</select>
+  	
+  	<update id="updateStaffPassword" parameterType="com.hjp.programme.vo.Staff">
+  		update TF_M_STAFF set PASSWORD = #{password,jdbcType=VARCHAR},CLEAR_PASSWORD=#{clearPassword,jdbcType=VARCHAR}  
+  		where STAFF_ID = #{staffId,jdbcType=VARCHAR}
+  	</update>
+</mapper>

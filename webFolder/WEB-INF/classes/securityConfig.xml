@@ -1,0 +1,80 @@
+<?xml version="1.0" encoding="UTF-8"?>  
+<beans:beans xmlns="http://www.springframework.org/schema/security"  
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:p="http://www.springframework.org/schema/p"  
+    xmlns:aop="http://www.springframework.org/schema/aop" xmlns:context="http://www.springframework.org/schema/context"  
+    xmlns:jee="http://www.springframework.org/schema/jee" xmlns:tx="http://www.springframework.org/schema/tx"  
+    xmlns:util="http://www.springframework.org/schema/util" xmlns:mvc="http://www.springframework.org/schema/mvc"  
+    xmlns:tool="http://www.springframework.org/schema/tool" xmlns:beans="http://www.springframework.org/schema/beans"  
+    xsi:schemaLocation="  
+            http://www.springframework.org/schema/aop http://www.springframework.org/schema/aop/spring-aop-3.0.xsd  
+            http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-3.0.xsd  
+            http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context-3.0.xsd  
+            http://www.springframework.org/schema/jee http://www.springframework.org/schema/jee/spring-jee-3.0.xsd  
+            http://www.springframework.org/schema/tx http://www.springframework.org/schema/tx/spring-tx-3.0.xsd  
+            http://www.springframework.org/schema/util http://www.springframework.org/schema/util/spring-util-3.0.xsd  
+            http://www.springframework.org/schema/mvc http://www.springframework.org/schema/mvc/spring-mvc-3.0.xsd  
+            http://www.springframework.org/schema/tool http://www.springframework.org/schema/tool/spring-tool-3.0.xsd  
+            http://www.springframework.org/schema/security http://www.springframework.org/schema/security/spring-security-3.1.xsd"  
+    default-lazy-init="true">  
+   
+    <http pattern="web-res/**" security="none" />
+	<http pattern="/login.do" security="none" />
+	<http pattern="/checkUserExist.do" security="none" />
+	
+	<http entry-point-ref="loginUrlEntryPoint" access-denied-page="/web-res/html/accessDenied.html">
+		<!-- 前台地址拦截 -->  
+        <intercept-url pattern="/**/*.do" access="ROLE_LOGIN" />
+        
+        <session-management>  
+            <concurrency-control max-sessions="1" />  
+        </session-management>
+        
+        <!-- 登录过滤器 -->  
+        <custom-filter before="FORM_LOGIN_FILTER" ref="loginFilter"/>
+        
+        <!-- 注销过滤器 -->  
+        <custom-filter before="LOGOUT_FILTER" ref="logoutFilter"/>  
+	</http>
+	
+	<!-- 认证切入点，这里使用它的目的是保证当用户登录之前就访问前后台时，会跳转到不同的登录页面 -->  
+    <beans:bean id="loginUrlEntryPoint" class="com.hjp.programme.security.LoginUrlEntryPoint" />
+	
+	<!-- 登录过滤器，验证前台用户 -->
+	<beans:bean id="loginFilter" class="org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter">
+		<beans:property name="authenticationManager" ref="authenticationManager"/>  
+        <beans:property name="authenticationFailureHandler" ref="failureHandler"/>  
+        <beans:property name="authenticationSuccessHandler" ref="successHandler"/>  
+        <beans:property name="filterProcessesUrl" value="/j_spring_security_check"/>  
+    </beans:bean>  
+  
+    <beans:bean id="failureHandler" class="org.springframework.security.web.authentication.SimpleUrlAuthenticationFailureHandler">
+    	<beans:property name="defaultFailureUrl" value="/login.do?error=true" />  
+    </beans:bean>  
+  
+    <beans:bean id="successHandler" class="org.springframework.security.web.authentication.SimpleUrlAuthenticationSuccessHandler">  
+        <beans:property name="alwaysUseDefaultTargetUrl" value="true"/>  
+        <beans:property name="defaultTargetUrl" value="/welcome.do"/>  
+    </beans:bean>
+    
+    <beans:bean id="logoutFilter" class="org.springframework.security.web.authentication.logout.LogoutFilter">  
+        <beans:constructor-arg value="/login.do" />  
+        <beans:constructor-arg>  
+            <beans:list>  
+                <beans:bean class="org.springframework.security.web.authentication.logout.SecurityContextLogoutHandler" />  
+            </beans:list>  
+        </beans:constructor-arg>  
+        <beans:property name="filterProcessesUrl" value="/j_spring_security_logout" />
+    </beans:bean>
+    
+    <authentication-manager alias="authenticationManager">  
+        <authentication-provider user-service-ref="userDetailsManager">  
+             <password-encoder ref="passwdEcoder">
+                <salt-source user-property="username"/>
+            </password-encoder>  
+        </authentication-provider>  
+    </authentication-manager>  
+    
+    <beans:bean id="passwdEcoder" class="org.springframework.security.authentication.encoding.Md5PasswordEncoder"/><!-- PasswordEncoder 密码接口 -->  
+       
+    <beans:bean id="userDetailsManager" class="com.hjp.programme.security.UserDetailsServiceImpl" />
+</beans:beans>

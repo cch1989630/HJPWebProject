@@ -1,0 +1,99 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.hjp.programme.mapper.BalanceMapper" >
+	<resultMap id="BalanceMap" type="com.hjp.programme.vo.Balance" >
+    	<result column="CARD_ID" property="cardId" jdbcType="VARCHAR"/>
+    	<result column="COST_ID" property="costId" jdbcType="VARCHAR"/>
+    	<result column="CHILD_MERCHANT_ID" property="childMerchantId" jdbcType="VARCHAR"/>
+    	<result column="MERCHANT_ID" property="merchantId" jdbcType="VARCHAR"/>
+    	<result column="COST" property="cost" jdbcType="DECIMAL"/>
+    	<result column="TRADE_STAFF_ID" property="tradeStaffId" jdbcType="VARCHAR"/>
+    	<result column="COST_TIME" property="costTime" jdbcType="TIMESTAMP"/>
+    	<result column="CARD_BALANCE" property="cardBalance" jdbcType="DECIMAL"/>
+    	<result column="IS_MONTH" property="isMonth" jdbcType="VARCHAR"/>
+    </resultMap>
+    
+    <insert id="insertBalance" parameterType="com.hjp.programme.vo.Balance">
+    	insert into TF_B_BALANCE
+    	<trim prefix="(" suffix=")" suffixOverrides="," >
+		    <if test="cardId != null" >
+		        CARD_ID,
+		    </if>
+		    <if test="costId != null" >
+		        COST_ID,
+		    </if>
+		    <if test="childMerchantId != null" >
+		        CHILD_MERCHANT_ID,
+		    </if>
+		    <if test="merchantId != null" >
+		        MERCHANT_ID,
+		    </if>
+		    <if test="cost != null" >
+		        COST,
+		    </if>
+		    <if test="tradeStaffId != null" >
+		        TRADE_STAFF_ID,
+		    </if>
+		    <if test="costTime != null" >
+		        COST_TIME,
+		    </if>
+		    <if test="cardBalance != null" >
+		        CARD_BALANCE,
+		    </if>
+		</trim>
+	    <trim prefix="values (" suffix=")" suffixOverrides="," >
+	      	<if test="cardId != null" >
+	        	#{cardId,jdbcType=VARCHAR},
+	      	</if>
+	      	<if test="costId != null" >
+	        	#{costId,jdbcType=VARCHAR},
+	      	</if>
+	      	<if test="childMerchantId != null" >
+	        	#{childMerchantId,jdbcType=VARCHAR},
+	      	</if>
+	      	<if test="merchantId != null" >
+	        	#{merchantId,jdbcType=VARCHAR},
+	      	</if>
+	      	<if test="cost != null" >
+	        	#{cost,jdbcType=DECIMAL},
+	      	</if>
+	      	<if test="tradeStaffId != null" >
+	        	#{tradeStaffId,jdbcType=VARCHAR},
+	      	</if>
+	      	<if test="costTime != null" >
+	        	#{costTime,jdbcType=TIMESTAMP},
+	      	</if>
+	      	<if test="cardBalance != null" >
+	        	#{cardBalance,jdbcType=DECIMAL},
+	      	</if>
+	  	</trim>
+    </insert>
+    
+    <update id="updateBalanceMonth" parameterType="java.util.HashMap">
+    	update TF_B_BALANCE set IS_MONTH = #{isMonth,jdbcType=VARCHAR}
+    	where MERCHANT_ID = #{merchantId,jdbcType=VARCHAR}
+    </update>
+    
+    <update id="updateBalance" parameterType="java.util.HashMap">
+  		update TF_B_BALANCE
+  		<set>
+  	  		<if test="cost != null" >
+        		COST = #{cost,jdbcType=DECIMAL},
+      		</if>
+      		<if test="cardBalance != null" >
+        		CARD_BALANCE = #{cardBalance,jdbcType=DECIMAL},
+      		</if>
+      		<if test="editTime != null" >
+        		EDIT_TIME = #{editTime,jdbcType=TIMESTAMP},
+      		</if>
+      		<if test="editStaffId != null" >
+        		EDIT_STAFF_ID = #{editStaffId,jdbcType=VARCHAR},
+      		</if>
+      		<if test="isMonth != null" >
+        		IS_MONTH = #{isMonth,jdbcType=VARCHAR},
+      		</if>
+      	</set>
+      	where COST_ID = #{costId,jdbcType=VARCHAR}
+	</update>
+    
+</mapper>

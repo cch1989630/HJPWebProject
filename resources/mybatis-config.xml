@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8"?>  
+<!DOCTYPE configuration PUBLIC "-//mybatis.org//DTD Config 3.0//EN" "http://mybatis.org/dtd/mybatis-3-config.dtd">
+<configuration>
+	<typeAliases>  
+        <typeAlias alias="page" type="com.hjp.programme.util.Page"/>
+    </typeAliases>  
+    <plugins>   
+         <plugin interceptor="com.hjp.programme.util.PaginationInterceptor">
+             <!--拦截器的public void setProperties(Properties properties)方法读取-->  
+             <property name="databaseType" value="MySql"/>
+         </plugin>   
+     </plugins>
+	<mappers>
+		<mapper resource="com/hjp/programme/dao/StaffMapper.xml"/>
+		<mapper resource="com/hjp/programme/dao/SequenceMapper.xml"/>
+		<mapper resource="com/hjp/programme/dao/CardTypeMapper.xml"/>
+		<mapper resource="com/hjp/programme/dao/MemberCardMapper.xml"/>
+		<mapper resource="com/hjp/programme/dao/MerchantMapper.xml"/>
+		<mapper resource="com/hjp/programme/dao/BalanceMapper.xml"/>
+	</mappers>
+</configuration> 
