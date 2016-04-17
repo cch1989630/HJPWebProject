@@ -19,7 +19,45 @@ public class Balance {
 	
 	private Long cardBalance;
 	
+	private String cardTypeName;
+	
+	private String editStaffId;
+	
+	private Date editTime;
+	
+	public String getHodeCardName() {
+		return hodeCardName;
+	}
+
+	public void setHodeCardName(String hodeCardName) {
+		this.hodeCardName = hodeCardName;
+	}
+
+	public String getCardTypeCode() {
+		return cardTypeCode;
+	}
+
+	public void setCardTypeCode(String cardTypeCode) {
+		this.cardTypeCode = cardTypeCode;
+	}
+
+	public Date getCreateTime() {
+		return createTime;
+	}
+
+	public void setCreateTime(Date createTime) {
+		this.createTime = createTime;
+	}
+
 	private String isMonth;
+	
+	private Long allCost;
+	
+	private String hodeCardName;
+	
+	private String cardTypeCode;
+	
+	private Date createTime;
 
 	public String getCardId() {
 		return cardId;
@@ -91,5 +129,37 @@ public class Balance {
 
 	public void setIsMonth(String isMonth) {
 		this.isMonth = isMonth;
+	}
+
+	public Long getAllCost() {
+		return allCost;
+	}
+
+	public void setAllCost(Long allCost) {
+		this.allCost = allCost;
+	}
+
+	public String getCardTypeName() {
+		return cardTypeName;
+	}
+
+	public void setCardTypeName(String cardTypeName) {
+		this.cardTypeName = cardTypeName;
+	}
+
+	public String getEditStaffId() {
+		return editStaffId;
+	}
+
+	public void setEditStaffId(String editStaffId) {
+		this.editStaffId = editStaffId;
+	}
+
+	public Date getEditTime() {
+		return editTime;
+	}
+
+	public void setEditTime(Date editTime) {
+		this.editTime = editTime;
 	}
 }

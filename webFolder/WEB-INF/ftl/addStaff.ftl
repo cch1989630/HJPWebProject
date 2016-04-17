@@ -29,7 +29,8 @@
                     				valueField:'id',
                     				textField:'text',
                     				panelHeight:'auto',
-                    				required:true">
+                    				required:true,
+                    				editable:false">
                     		</input>
                     	</td>
 		    			<td>操作员编号</td>
@@ -46,6 +47,21 @@
 		    			<td><input class="easyui-textbox" type="password" validType="length[3,12]" id="password" data-options="required:true"></input></td>
 		    			<td>确认密码</td>
 		    			<td><input class="easyui-textbox" type="password" validType="equalTo['#password']" id="confirmPassword" data-options="required:true"></input></td>
+		    		</tr>
+		    		<tr>
+		    			<td>用户权限</td>
+		    			<td><input class="easyui-combobox" 
+            					id="roleCode"
+            					data-options="
+                    				url:'queryStaffMenuRole.do',
+                    				method:'get',
+                    				valueField:'id',
+                    				textField:'text',
+                    				panelHeight:'auto',
+                    				required:true,
+                    				editable:false">
+                    		</input>
+                    	</td>
 		    		</tr>
 		    	</table>
 		    </form>

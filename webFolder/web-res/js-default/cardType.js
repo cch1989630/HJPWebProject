@@ -1,26 +1,33 @@
-var url;
+var dataType;
 function newUser() {
-	$('#dlg').dialog('open').dialog('center').dialog('setTitle', '新会员卡类型');
+	$('#dlg').dialog('open').dialog('center').dialog('setTitle', '新贵宾卡类型');
 	$('#fm').form('clear');
-	url = 'save_user.php';
+	dataType = 'save';
 }
 function editUser() {
 	var row = $('#dg').datagrid('getSelected');
 	if (row) {
-		$('#dlg').dialog('open').dialog('center').dialog('setTitle',
-				'Edit User');
-		$('#fm').form('load', row);
-		url = 'update_user.php?id=' + row.id;
+		$('#dlg').dialog('open').dialog('center').dialog('setTitle', '修改贵宾卡类型');
+		$('#fm').form('load', {
+			cardTypeName:row.cardTypeName,
+			cardTypeCode:row.cardTypeCode
+		});
+		dataType = "edit";
 	}
 }
-function saveUser() {
+function submitCardType() {
 	var data ={};
+	var submitFunction = "saveCardType";
 	data.cardTypeName = $("#cardTypeName").val();
+	if (dataType === "edit") {
+		data.cardTypeCode = $("#cardTypeCode").val();
+		submitFunction = "updateCardType";
+	}
 	data = JSON.stringify(data);
-	jqueryAjaxData("CardManageController", "saveCardType", data, finishSaveCardType);
+	jqueryAjaxData("CardManageController", submitFunction, data, finishSubmitCardType);
 }
 
-function finishSaveCardType(data) {
+function finishSubmitCardType(data) {
 	var ret = eval(data);
 	if(ret.state === 1) {
 		$('#dlg').dialog('close');

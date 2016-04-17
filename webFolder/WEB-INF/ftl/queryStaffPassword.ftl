@@ -41,10 +41,10 @@
     </table>
     <div id="dlg" class="easyui-dialog" style="width:400px;height:280px;padding:10px 20px"
             closed="true" buttons="#dlg-buttons">
-        <div class="ftitle">会员卡类型</div>
+        <div class="ftitle">贵宾卡类型</div>
         <form id="fm" method="post" novalidate>
             <div class="fitem">
-                <label>会员卡类型名称:</label>
+                <label>贵宾卡类型名称:</label>
                 <input id="cardTypeName" class="easyui-textbox" required="true">
             </div>
         </form>

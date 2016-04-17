@@ -42,6 +42,17 @@
 	     </trim>
     </insert>
     
+    <update id="updateCardType" parameterType="java.util.HashMap">
+  		update td_m_card_type
+  		<set>
+  	  		<if test="cardTypeName != null" >
+        		CARD_TYPE_NAME = #{cardTypeName,jdbcType=VARCHAR},
+      		</if>
+      	</set>
+      	where CARD_TYPE_CODE = #{cardTypeCode,jdbcType=VARCHAR}
+      	and MERCHANT_ID = #{merchantId,jdbcType=VARCHAR}
+    </update>
+    
     <select id="queryCardTypeNumber" resultMap="CardTypeMap" parameterType="page">
   		SELECT ct.CARD_TYPE_CODE, ct.CARD_TYPE_NAME, ct.MERCHANT_ID, ct.STATE, IFNULL(t.CARD_NUMBER, 0) CARD_NUMBER,
 		CASE ct.STATE

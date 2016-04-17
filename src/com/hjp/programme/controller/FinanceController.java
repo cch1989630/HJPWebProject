@@ -19,6 +19,7 @@ import com.hjp.programme.service.IBalanceService;
 import com.hjp.programme.service.IMemberCardService;
 import com.hjp.programme.service.IStaffService;
 import com.hjp.programme.util.DateStringUtils;
+import com.hjp.programme.vo.Balance;
 import com.hjp.programme.vo.Staff;
 
 @Controller(value="FinanceController")
@@ -63,16 +64,15 @@ public class FinanceController {
 		String costId = req.getParameter("costId");
 		String cost = req.getParameter("cost");
 		String costCardBalance = req.getParameter("costCardBalance");
-		//String editStaffId = req.getParameter("editStaffId");
-		//String editTime = req.getParameter("editTime");
 		
-		HashMap<String, Object> cond = new HashMap<String, Object>();
-		cond.put("cost", (long)DateStringUtils.mul(Double.parseDouble(cost), 100.0));
-		cond.put("costId", costId);
-		cond.put("cardBalance", (long)DateStringUtils.mul(Double.parseDouble(costCardBalance), 100.0));
-		cond.put("editStaffId", staff.getStaffId());
-		cond.put("editTime", new Date());
-		balanceService.updateBalance(cond);
+		Balance balance = new Balance();
+		balance.setCostId(costId);
+		balance.setCost((long)DateStringUtils.mul(Double.parseDouble(cost), 100.0));
+		balance.setCardBalance((long)DateStringUtils.mul(Double.parseDouble(costCardBalance), 100.0));
+		balance.setEditStaffId(staff.getStaffId());
+		balance.setEditTime(new Date());
+		
+		balanceService.updateBalanceByMonth(balance);;
 		
 		JSONObject returnObject = new JSONObject();
 		

@@ -22,8 +22,9 @@ import com.hjp.programme.util.CCHException;
 import com.hjp.programme.util.DateStringUtils;
 import com.hjp.programme.util.Page;
 import com.hjp.programme.util.PwdEncryptor;
-import com.hjp.programme.vo.CardType;
+import com.hjp.programme.vo.Role;
 import com.hjp.programme.vo.Staff;
+import com.hjp.programme.vo.StaffRole;
 
 @Controller(value="StaffManageController")
 public class StaffManageController {
@@ -64,7 +65,7 @@ public class StaffManageController {
 		String queryStaffId = req.getParameter("queryStaffId");
 		
 		HashMap<String, Object> con = new HashMap<String, Object>();
-		con.put("merchantId", staff.getMerchantId());
+		//con.put("merchantId", staff.getMerchantId());
 		
 		if (queryStaffId != null && !"".equals(queryStaffId)) {
 			con.put("queryStaffId", queryStaffId);
@@ -93,7 +94,33 @@ public class StaffManageController {
 	}
 	
 	/**
-	 * 新增会员卡类型
+	 * 菜单权限列表查询
+	 * @param req
+	 * @param res
+	 * @param model
+	 * @throws Exception
+	 */
+	@RequestMapping(value = "/queryStaffMenuRole.do", method = {RequestMethod.POST, RequestMethod.GET})
+	public void queryStaffMenuRole(HttpServletRequest req, HttpServletResponse res, ModelMap model) throws Exception {
+		
+		HashMap<String, Object> cond = new HashMap<String, Object>();
+		cond.put("roleType", "MENU");
+		List<Role> roleList = staffService.queryRole(cond);
+		
+		JSONArray menuRoleArray = new JSONArray();
+		for (int i = 0; i < roleList.size(); i++) {
+			JSONObject oneObject = new JSONObject();
+			oneObject.put("id", roleList.get(i).getRoleCode());
+			oneObject.put("text", roleList.get(i).getRoleName());
+			oneObject.put("state", roleList.get(i).getState());
+			menuRoleArray.put(oneObject);
+		}
+		res.setContentType("text/html;charset=UTF-8");
+		res.getWriter().print(menuRoleArray.toString());
+	}
+	
+	/**
+	 * 新增贵宾卡类型
 	 * @param json
 	 * @return
 	 * @throws Exception
@@ -109,7 +136,11 @@ public class StaffManageController {
 		staff.setCreateTime(DateStringUtils.getDateFromString(json.getString("createTime"), "yyyy-MM-dd HH:mm:ss"));
 		String password = PwdEncryptor.encryptByMD5(json.getString("password"),json.getString("selectStaffId"));
 		staff.setPassword(password);
-		staffService.insertStaff(staff);
+		
+		StaffRole staffRole = new StaffRole();
+		staffRole.setRoleCode(json.getString("roleCode"));
+		
+		staffService.insertStaff(staff, staffRole);
 		
 		return returnJson;
 	}

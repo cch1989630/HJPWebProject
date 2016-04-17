@@ -35,7 +35,8 @@
                     				valueField:'id',
                     				textField:'text',
                     				panelHeight:'auto',
-                    				required:true">
+                    				required:true,
+                    				editable:false">
                     		</input>
                     	</td>
 		    			<td>持卡人联系方式</td>
@@ -43,7 +44,7 @@
 		    		</tr>
 		    		<tr>
 		    			<td>卡余额</td>
-		    			<td><input class="easyui-textbox" type="text" id="cardBalance" data-options="required:true"></input></td>
+		    			<td><input class="easyui-numberbox" type="text" id="cardBalance" data-options="required:true"></input></td>
 		    			<td>开卡日期</td>
 		    			<td><input id="createTime" class="easyui-datebox" data-options="disabled:true,formatter:myformatter,parser:myparser"></input></td>
 		    		</tr>

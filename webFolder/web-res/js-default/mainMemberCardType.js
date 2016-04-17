@@ -8,3 +8,17 @@ function queryCardByType() {
         $("#dg").datagrid('reload');
 	}
 }
+
+function exportExcl() {
+	var cardTypeCode = $('#cardTypeCode').combobox('getValue');
+	window.location.href = "exportMainConsumeByType.do?cardTypeCode=" + cardTypeCode;
+}
+
+$(document).ready(function () {
+	$('#dg').datagrid({
+		onLoadSuccess: function(data){
+			//console.info(data);
+			$('#allCost').textbox('setValue',data.allCost);
+		}
+	});
+});

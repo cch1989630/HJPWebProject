@@ -1,5 +1,6 @@
 package com.hjp.programme.mapper;
 
+import java.util.HashMap;
 import java.util.List;
 
 import org.springframework.stereotype.Component;
@@ -18,4 +19,8 @@ public interface MemberCardMapper {
 	List<MemberCard> queryMemberCardBalanceByPage(Page page);
 	
 	List<MemberCard> queryMemberCardInfoByPage(Page page);
+	
+	List<MemberCard> queryMemberCardBalance(HashMap<String, Object> cond);
+	
+	List<MemberCard> queryMemberCardInfoByType(HashMap<String, Object> cond);
 }

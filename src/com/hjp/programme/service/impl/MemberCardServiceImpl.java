@@ -1,5 +1,6 @@
 package com.hjp.programme.service.impl;
 
+import java.util.HashMap;
 import java.util.List;
 
 import javax.annotation.Resource;
@@ -28,9 +29,18 @@ public class MemberCardServiceImpl implements IMemberCardService {
 	@Resource(name="balanceMapper")  
     private BalanceMapper balanceMapper;
 	
+	@Transactional(rollbackFor=CCHException.class)
 	@Override
-	public int insertMemberCard(MemberCard memberCard) {
-		return memberCardMapper.insertMemberCard(memberCard);
+	public void insertMemberCard(MemberCard memberCard) throws CCHException {
+		List<MemberCard> existMemberCard = memberCardMapper.queryMemberCardInfo(memberCard.getCardId());
+		if (existMemberCard.size() > 0) {
+			throw new CCHException("0", "该[" + memberCard.getCardId() + "]贵宾卡已存在,请重新输入贵宾卡号");
+		}
+		try {
+			memberCardMapper.insertMemberCard(memberCard);
+		} catch (Exception e) {
+			throw new CCHException("0", "新增贵宾卡失败");
+		}
 	}
 
 	@Override
@@ -48,7 +58,7 @@ public class MemberCardServiceImpl implements IMemberCardService {
 			memberCardMapper.updateMemberCardByCost(memberCard);
 		} catch (Exception e) {
 			e.printStackTrace();
-			throw new CCHException("0", "会员卡消费失败");
+			throw new CCHException("0", "贵宾卡消费失败");
 		}
 	}
 
@@ -60,6 +70,17 @@ public class MemberCardServiceImpl implements IMemberCardService {
 	@Override
 	public List<MemberCard> queryMemberCardInfoByPage(Page page) {
 		return memberCardMapper.queryMemberCardInfoByPage(page);
+	}
+
+	@Override
+	public List<MemberCard> queryMemberCardBalance(HashMap<String, Object> cond) {
+		return memberCardMapper.queryMemberCardBalance(cond);
+	}
+
+	@Override
+	public List<MemberCard> queryMemberCardInfoByType(
+			HashMap<String, Object> cond) {
+		return memberCardMapper.queryMemberCardInfoByType(cond);
 	}
 
 }

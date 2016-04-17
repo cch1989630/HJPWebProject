@@ -7,8 +7,69 @@
     	<result column="STATE" property="state" jdbcType="VARCHAR"/>
     </resultMap>
     
+    <insert id="insertMerchantInfo" parameterType="com.hjp.programme.vo.MerchantInfo">
+    	insert into td_m_merchant_info
+    	<trim prefix="(" suffix=")" suffixOverrides="," >
+		    <if test="merchantId != null" >
+		        MERCHANT_ID,
+		    </if>
+		    <if test="merchantName != null" >
+		        MERCHANT_NAME,
+		    </if>
+		    <if test="state != null" >
+		        STATE,
+		    </if>
+		</trim>
+	    <trim prefix="values (" suffix=")" suffixOverrides="," >
+	      	<if test="merchantId != null" >
+	        	#{merchantId,jdbcType=VARCHAR},
+	      	</if>
+	      	<if test="merchantName != null" >
+	        	#{merchantName,jdbcType=VARCHAR},
+	      	</if>
+	      	<if test="state != null" >
+	        	#{state,jdbcType=VARCHAR},
+	      	</if>
+	    </trim>
+    </insert>
+    
+    <insert id="insertMerchantRegister" parameterType="com.hjp.programme.vo.MerchantRegister">
+    	insert into tf_m_merchant_register
+    	<trim prefix="(" suffix=")" suffixOverrides="," >
+		    <if test="merchantId != null" >
+		        MERCHANT_ID,
+		    </if>
+		    <if test="childMerchantId != null" >
+		        CHILD_MERCHANT_ID,
+		    </if>
+		</trim>
+	    <trim prefix="values (" suffix=")" suffixOverrides="," >
+	      	<if test="merchantId != null" >
+	        	#{merchantId,jdbcType=VARCHAR},
+	      	</if>
+	      	<if test="childMerchantId != null" >
+	        	#{childMerchantId,jdbcType=VARCHAR},
+	      	</if>
+	    </trim>
+    </insert>
+    
+    <update id="updateMerchantInfo" parameterType="java.util.HashMap">
+  		update td_m_merchant_info
+  		<set>
+  	  		<if test="merchantName != null" >
+        		MERCHANT_NAME = #{merchantName,jdbcType=VARCHAR},
+      		</if>
+      	</set>
+      	where MERCHANT_ID = #{merchantId,jdbcType=VARCHAR}
+    </update>
+    
     <select id="queryMerchantInfo" resultMap="MerchantInfoMap" parameterType="java.lang.String">
-    	SELECT MERCHANT_ID, MERCHANT_NAME
+    	SELECT MERCHANT_ID, MERCHANT_NAME, STATE
+		FROM td_m_merchant_info 
+    </select>
+    
+    <select id="queryMerchantInfoByPage" resultMap="MerchantInfoMap" parameterType="page">
+    	SELECT MERCHANT_ID, MERCHANT_NAME, STATE
 		FROM td_m_merchant_info 
     </select>
     

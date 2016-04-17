@@ -12,7 +12,7 @@
     <script type="text/javascript" src="web-res/js-default/cardType.js"></script>
 </head>
 <body>
-    <table id="dg" title="会员卡类型统计" class="easyui-datagrid" style="width:80%;height:90%"
+    <table id="dg" title="贵宾卡类型统计" class="easyui-datagrid" style="width:80%;height:90%"
             url="queryCardTypeNumber.do"
             toolbar="#toolbar" pagination="true"
             rownumbers="true" fitColumns="true" singleSelect="true">
@@ -27,23 +27,22 @@
     </table>
     <div id="toolbar">
         <a href="javascript:void(0)" class="easyui-linkbutton" iconCls="icon-add" plain="true" onclick="newUser()">新增会员类型</a>
-        <!--
-        <a href="javascript:void(0)" class="easyui-linkbutton" iconCls="icon-remove" plain="true" onclick="destroyUser()">删除会员类型</a>
-    	-->
+        <a href="javascript:void(0)" class="easyui-linkbutton" iconCls="icon-edit" plain="true" onclick="editUser()">修改会员类型</a>
     </div>
     
     <div id="dlg" class="easyui-dialog" style="width:400px;height:280px;padding:10px 20px"
             closed="true" buttons="#dlg-buttons">
-        <div class="ftitle">会员卡类型</div>
+        <div class="ftitle">贵宾卡类型</div>
         <form id="fm" method="post" novalidate>
             <div class="fitem">
-                <label>会员卡类型名称:</label>
-                <input id="cardTypeName" class="easyui-textbox" required="true">
+            	<input id="cardTypeCode" name="cardTypeCode" style="display:none"/>
+                <label>贵宾卡类型名称:</label>
+                <input id="cardTypeName" name="cardTypeName" class="easyui-textbox" required="true">
             </div>
         </form>
     </div>
     <div id="dlg-buttons">
-        <a href="javascript:void(0)" class="easyui-linkbutton c6" iconCls="icon-ok" onclick="saveUser()" style="width:90px">保存</a>
+        <a href="javascript:void(0)" class="easyui-linkbutton c6" iconCls="icon-ok" onclick="submitCardType()" style="width:90px">保存</a>
         <a href="javascript:void(0)" class="easyui-linkbutton" iconCls="icon-cancel" onclick="javascript:$('#dlg').dialog('close')" style="width:90px">取消</a>
     </div>
     <style type="text/css">

@@ -10,3 +10,18 @@ function queryMemberCardBalance() {
         $("#dg").datagrid('reload');
 	}
 }
+
+function exportExcl() {
+	var beginTime = $('#beginTime').datebox('getValue');
+	var endTime = $('#endTime').datebox('getValue');
+	window.location.href = "exportChildConsume.do?beginTime=" + beginTime + "&endTime=" + endTime;
+}
+
+$(document).ready(function () {
+	$('#dg').datagrid({
+		onLoadSuccess: function(data){
+			//console.info(data);
+			$('#allCost').textbox('setValue',data.allCost);
+		}
+	});
+});

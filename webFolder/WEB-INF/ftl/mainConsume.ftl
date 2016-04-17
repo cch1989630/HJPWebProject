@@ -12,7 +12,7 @@
     <script type="text/javascript" src="web-res/js-default/mainConsume.js"></script>
 </head>
 <body>
-	<div class="easyui-panel" style="width:100%;height:30%" title="搜索">
+	<div class="easyui-panel" style="width:100%;height:35%" title="搜索">
 		<div style="padding:10px 60px 20px 60px">
 		    <form id="ff" method="post">
 		    	<table cellpadding="5">
@@ -58,12 +58,17 @@
 		    			<td>卡余额(止)</td>
 		    			<td><input class="easyui-textbox" type="text" id="cardBalanceEnd" data-options=""></input></td>
 		    			<td><a href="#" onclick="queryMemberCardBalance()" class="easyui-linkbutton" data-options="iconCls:'icon-search'" style="width:80px">搜索</a></td>
+		    			<td><a href="#" onclick="exportExcl()" class="easyui-linkbutton" data-options="iconCls:'icon-save'" style="width:80px">导出</a></td>
+		    		</tr>
+		    		<tr>
+		    			<td>总计</td>
+		    			<td><input class="easyui-textbox" type="text" id="allCost" data-options="disabled:true"></input></td>
 		    		</tr>
 		    	</table>
 		    </form>
 		</div>
 	</div>
-    <table id="dg" title="会员卡消费信息" class="easyui-datagrid" style="width:100%;height:70%"
+    <table id="dg" title="贵宾卡消费信息" class="easyui-datagrid" style="width:100%;height:65%"
             url="queryMemberCardBalance.do"
             pagination="true"
             rownumbers="true" fitColumns="true" singleSelect="true">
@@ -83,10 +88,10 @@
     </table>
     <div id="dlg" class="easyui-dialog" style="width:400px;height:280px;padding:10px 20px"
             closed="true" buttons="#dlg-buttons">
-        <div class="ftitle">会员卡类型</div>
+        <div class="ftitle">贵宾卡类型</div>
         <form id="fm" method="post" novalidate>
             <div class="fitem">
-                <label>会员卡类型名称:</label>
+                <label>贵宾卡类型名称:</label>
                 <input id="cardTypeName" class="easyui-textbox" required="true">
             </div>
         </form>

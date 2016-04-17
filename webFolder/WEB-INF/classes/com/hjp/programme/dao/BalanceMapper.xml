@@ -11,6 +11,11 @@
     	<result column="COST_TIME" property="costTime" jdbcType="TIMESTAMP"/>
     	<result column="CARD_BALANCE" property="cardBalance" jdbcType="DECIMAL"/>
     	<result column="IS_MONTH" property="isMonth" jdbcType="VARCHAR"/>
+    	<result column="ALL_COST" property="allCost" jdbcType="DECIMAL"/>
+    	<result column="HODE_CARD_NAME" property="hodeCardName" jdbcType="VARCHAR"/>
+    	<result column="CARD_TYPE_CODE" property="cardTypeCode" jdbcType="VARCHAR"/>
+    	<result column="CREATE_TIME" property="createTime" jdbcType="TIMESTAMP"/>
+    	<result column="CARD_TYPE_NAME" property="cardTypeName" jdbcType="VARCHAR"/>
     </resultMap>
     
     <insert id="insertBalance" parameterType="com.hjp.programme.vo.Balance">
@@ -95,5 +100,89 @@
       	</set>
       	where COST_ID = #{costId,jdbcType=VARCHAR}
 	</update>
+	
+	<select id="queryMemberCardAllBalance" resultMap="BalanceMap" parameterType="java.util.HashMap">
+    	SELECT SUM(bb.COST) ALL_COST, mc.HODE_CARD_NAME, mc.CARD_TYPE_CODE, mc.CREATE_TIME, ct.CARD_TYPE_NAME
+		FROM tf_f_member_card mc LEFT JOIN tf_b_balance bb ON mc.CARD_ID = bb.CARD_ID
+		LEFT JOIN td_m_card_type ct ON mc.CARD_TYPE_CODE = ct.CARD_TYPE_CODE
+		where 1=1
+		<if test="cardBalanceBegin != null" >
+			<![CDATA[
+			and mc.CARD_BALANCE >= #{cardBalanceBegin,jdbcType=VARCHAR}
+			]]>
+		</if>
+		<if test="cardBalanceEnd != null" >
+			<![CDATA[
+			and mc.CARD_BALANCE <= #{cardBalanceEnd,jdbcType=VARCHAR}
+			]]>
+		</if>
+		<if test="costMerchantId != null" >
+			and bb.CHILD_MERCHANT_ID = #{costMerchantId,jdbcType=VARCHAR}
+		</if>
+		<if test="openBeginTime != null" >
+			<![CDATA[
+			AND mc.CREATE_TIME >= DATE_FORMAT(#{openBeginTime,jdbcType=VARCHAR},'%Y-%m-%d %H:%i:%s')
+			]]>
+		</if>
+		<if test="openEndTime != null" >
+			<![CDATA[
+			AND mc.CREATE_TIME >= DATE_FORMAT(#{openEndTime,jdbcType=VARCHAR},'%Y-%m-%d %H:%i:%s')
+			]]>
+		</if>
+		<if test="beginTime != null" >
+			<![CDATA[
+			AND bb.COST_TIME >= DATE_FORMAT(#{beginTime,jdbcType=VARCHAR},'%Y-%m-%d %H:%i:%s')
+			]]>
+		</if>
+		<if test="endTime != null" >
+			<![CDATA[
+			AND bb.COST_TIME <= DATE_FORMAT(#{endTime,jdbcType=VARCHAR},'%Y-%m-%d %H:%i:%s')
+			]]>
+		</if>
+		<if test="costTime != null" >
+			<![CDATA[
+			AND (DATE_FORMAT(bb.COST_TIME,'%Y-%m-%d') = DATE_FORMAT(#{costTime,jdbcType=VARCHAR},'%Y-%m-%d'))
+			]]>
+		</if>
+		<if test="cost != null" >
+			AND bb.COST = #{cost,jdbcType=VARCHAR}
+		</if>
+		<if test="isMonth != null" >
+			AND bb.IS_MONTH = #{isMonth,jdbcType=VARCHAR}
+		</if>
+		<if test="cardId != null" >
+			AND mc.CARD_ID = #{cardId,jdbcType=VARCHAR}
+		</if>
+		<if test="cardTypeCode != null" >
+			AND mc.CARD_TYPE_CODE = #{cardTypeCode,jdbcType=VARCHAR}
+		</if>
+		<if test="hodeCardName != null" >
+			AND mc.HODE_CARD_NAME like %#{hodeCardName,jdbcType=VARCHAR}%
+		</if>
+		<if test="openTime != null" >
+			<![CDATA[
+			AND (DATE_FORMAT(mc.CREATE_TIME,'%Y-%m-%d') = DATE_FORMAT(#{openTime,jdbcType=VARCHAR},'%Y-%m-%d'))
+			]]>
+		</if>
+		ORDER BY bb.COST_TIME DESC
+    </select>
+    
+    <select id="queryBalanceInfo" resultMap="BalanceMap" parameterType="java.util.HashMap">
+    	SELECT b.CARD_ID, b.COST_ID, b.CARD_BALANCE, b.COST, b.CHILD_MERCHANT_ID, b.COST_TIME, b.EDIT_STAFF_ID,
+			b.EDIT_TIME, b.IS_MONTH, b.MERCHANT_ID, b.TRADE_STAFF_ID
+		FROM tf_b_balance b
+		WHERE 1 = 1
+		<if test="costId != null" >
+			AND b.COST_ID = #{costId,jdbcType=VARCHAR}
+		</if>
+		<if test="cardId != null" >
+			AND b.CARD_ID = #{cardId,jdbcType=VARCHAR}
+		</if>
+		<if test="beginTime != null" >
+			<![CDATA[
+			AND b.COST_TIME > DATE_FORMAT(#{beginTime,jdbcType=VARCHAR},'%Y-%m-%d %H:%i:%s')
+			]]>
+		</if>
+    </select>
     
 </mapper>

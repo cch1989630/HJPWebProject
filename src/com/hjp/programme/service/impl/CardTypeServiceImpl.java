@@ -1,5 +1,6 @@
 package com.hjp.programme.service.impl;
 
+import java.util.HashMap;
 import java.util.List;
 
 import javax.annotation.Resource;
@@ -38,6 +39,11 @@ public class CardTypeServiceImpl implements ICardTypeService {
 	@Override
 	public List<CardType> queryCardType(String merchantId) {
 		return cardTypeMapper.queryCardType(merchantId);
+	}
+
+	@Override
+	public void updateCardType(HashMap<String, Object> cond) {
+		cardTypeMapper.updateCardType(cond);
 	}
 
 }

@@ -12,7 +12,7 @@
     <script type="text/javascript" src="web-res/js-default/childMerchantConsume.js"></script>
 </head>
 <body>
-	<div class="easyui-panel" style="width:100%;height:20%" title="搜索">
+	<div class="easyui-panel" style="width:100%;height:30%" title="搜索">
 		<div style="padding:10px 60px 20px 60px">
 		    <form id="ff" method="post">
 		    	<table cellpadding="5">
@@ -22,14 +22,19 @@
 		    			<td>消费日期(止)</td>
 		    			<td><input id="endTime" class="easyui-datebox" data-options="formatter:endTimeFormatter,parser:changeParser"></input></td>
 		    			<td><a href="#" onclick="queryMemberCardBalance()" class="easyui-linkbutton" data-options="iconCls:'icon-search'" style="width:80px">搜索</a></td>
+		    			<td><a href="#" onclick="exportExcl()" class="easyui-linkbutton" data-options="iconCls:'icon-save'" style="width:80px">导出</a></td>
+		    		</tr>
+		    		<tr>
+		    			<td>总计</td>
+		    			<td><input class="easyui-textbox" type="text" id="allCost" data-options="disabled:true"></input></td>
 		    		</tr>
 		    	</table>
 		    </form>
 		</div>
 	</div>
-    <table id="dg" title="门店消费信息" class="easyui-datagrid" style="width:100%;height:80%"
+    <table id="dg" title="门店消费信息" class="easyui-datagrid" style="width:100%;height:70%"
             url="queryChildMerchantBalance.do"
-            pagination="true"
+            pagination="true" pageList = "[15,30,45]" pageSize = "15"
             rownumbers="true" fitColumns="true" singleSelect="true">
         <thead>
             <tr>
@@ -39,16 +44,16 @@
                 <th field="createTime" width="50">开卡日期</th>
                 <th field="cost" width="50">消费金额</th>
                 <th field="costTime" width="50">消费日期</th>
-                <th field="cardBalance" width="50">卡余额</th>
+                <th field="costCardBalance" width="50">卡余额</th>
             </tr>
         </thead>
     </table>
     <div id="dlg" class="easyui-dialog" style="width:400px;height:280px;padding:10px 20px"
             closed="true" buttons="#dlg-buttons">
-        <div class="ftitle">会员卡类型</div>
+        <div class="ftitle">贵宾卡类型</div>
         <form id="fm" method="post" novalidate>
             <div class="fitem">
-                <label>会员卡类型名称:</label>
+                <label>贵宾卡类型名称:</label>
                 <input id="cardTypeName" class="easyui-textbox" required="true">
             </div>
         </form>

@@ -1,6 +1,7 @@
 package com.hjp.programme.mapper;
 
 import java.util.HashMap;
+import java.util.List;
 
 import org.springframework.stereotype.Component;
 
@@ -14,4 +15,8 @@ public interface BalanceMapper {
  	void updateBalance(HashMap<String, Object> cond);
  	
  	void updateBalanceMonth(HashMap<String, Object> cond);
+ 	
+ 	Balance queryMemberCardAllBalance(HashMap<String, Object> cond);
+ 	
+ 	List<Balance> queryBalanceInfo(HashMap<String, Object> cond);
 }

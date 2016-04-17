@@ -16,16 +16,20 @@
 <style>
 	//.panel{margin:0 20% 0 20%};
 </style>
-
 <body>
-    <h2 style="text-align:center;font-size:200%;">花津浦会员卡管理系统</h2>
+    <h2 style="text-align:center;font-size:200%;">花津浦贵宾卡管理系统</h2>
+    <input id="error" value="${error!''}" style="display:none"/>
     <div style="margin:20px 0;"></div>
     <form id="busiForm" action="j_spring_security_check" method="post" >
 	    <div style="margin:0 0 0 30%">
 		    <div class="easyui-panel" title="登录" style="width:60%;padding:30px 60px;">
 		        <div style="margin-bottom:20px">
 		            <div>工号:</div>
-		            <input class="easyui-textbox" id="j_username" name="j_username" style="width:100%;height:32px">
+		            <#if username??>
+		            	<input class="easyui-textbox" id="j_username" value="${username}" name="j_username" style="width:100%;height:32px">
+		            <#else>
+		            	<input class="easyui-textbox" id="j_username" name="j_username" style="width:100%;height:32px">
+		            </#if>
 		        </div>
 		        <div style="margin-bottom:20px">
 		            <div>密码:</div>

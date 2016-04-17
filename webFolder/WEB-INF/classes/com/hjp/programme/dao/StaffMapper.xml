@@ -17,6 +17,14 @@
     	<result column="ROLE_CODE" property="roleCode" jdbcType="VARCHAR"/>
     </resultMap>
     
+    <resultMap id="RoleMap" type="com.hjp.programme.vo.Role" >
+    	<result column="MERCHANT_ID" property="merchantId" jdbcType="VARCHAR"/>
+    	<result column="ROLE_CODE" property="roleCode" jdbcType="VARCHAR"/>
+    	<result column="ROLE_NAME" property="roleName" jdbcType="VARCHAR"/>
+    	<result column="ROLE_TYPE" property="roleType" jdbcType="VARCHAR"/>
+    	<result column="STATE" property="state" jdbcType="VARCHAR"/>
+    </resultMap>
+    
     <insert id="insertStaff" parameterType="com.hjp.programme.vo.Staff">
     	insert into TF_M_STAFF
     	<trim prefix="(" suffix=")" suffixOverrides="," >
@@ -111,6 +119,25 @@
     	select STAFF_ID, ROLE_CODE
     		from TF_M_STAFF_ROLE
     	where STAFF_ID = #{staffId,jdbcType=VARCHAR}
+  	</select>
+  	
+  	<select id="queryRole" resultMap="RoleMap" parameterType="java.util.HashMap" >
+    	SELECT r.MERCANT_ID, r.ROLE_CODE, r.ROLE_NAME, r.ROLE_TYPE, r.STATE
+			FROM td_m_role r
+			WHERE 1=1 
+			<if test="roleType != null" >
+				and r.ROLE_TYPE = #{roleType,jdbcType=VARCHAR}
+			</if>
+  	</select>
+  	
+  	<select id="queryStaffRoleByCond" resultMap="StaffRoleMap" parameterType="java.util.HashMap" >
+    	SELECT sr.STAFF_ID, sr.ROLE_CODE
+			FROM td_m_role r, tf_m_staff_role sr
+			WHERE r.ROLE_CODE = sr.ROLE_CODE
+			and sr.STAFF_ID = #{staffId,jdbcType=VARCHAR}
+			<if test="roleType != null" >
+				and r.ROLE_TYPE = #{roleType,jdbcType=VARCHAR}
+			</if>
   	</select>
   	
   	<update id="updateStaffPassword" parameterType="com.hjp.programme.vo.Staff">

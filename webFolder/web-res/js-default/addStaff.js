@@ -7,7 +7,8 @@ function submitForm(){
 		data.staffName = $("#staffName").val();
 		data.createTime = $("#createTime").val();
 		data.password = $("#password").val();
-		data.createTime = $("#createTime").val();
+		data.createTime = $('#createTime').datebox('getValue');
+		data.roleCode = $('#roleCode').combobox('getValue');
 		data = JSON.stringify(data);
 		jqueryAjaxData("StaffManageController", "addStaff", data, finishAddStaff);
 	}
@@ -19,6 +20,7 @@ function finishAddStaff(data) {
 	if(ret.state === 1) {
 		showMessage("成功","新增用户成功","show",function(){
 			$('#ff').form('clear');
+			data.createTime = $('#createTime').datebox('setValue', getCurrTime());
 		});
 	}
 }

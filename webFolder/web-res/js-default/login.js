@@ -25,6 +25,12 @@ function subForm() {
 			}
 		}
 	});
-	
 }
+
+$(document).ready(function () {
+	var error = $("#error").val();
+	if (error != "") {
+		showMessage("错误",error,"show");
+	}
+});
 

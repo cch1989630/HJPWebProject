@@ -1,7 +1,11 @@
 package com.hjp.programme.controller;
 
+import java.io.OutputStream;
+import java.net.URLEncoder;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
@@ -16,11 +20,13 @@ import org.springframework.ui.ModelMap;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 
+import com.hjp.programme.poi.vo.MemberTypeBalanceExcelPoi;
 import com.hjp.programme.service.ICardTypeService;
 import com.hjp.programme.service.IMemberCardService;
 import com.hjp.programme.service.IStaffService;
 import com.hjp.programme.util.CCHException;
 import com.hjp.programme.util.DateStringUtils;
+import com.hjp.programme.util.ExcelPoiUtil;
 import com.hjp.programme.util.Page;
 import com.hjp.programme.vo.Balance;
 import com.hjp.programme.vo.CardType;
@@ -67,7 +73,7 @@ public class CardManageController {
 	}
 	
 	/**
-	 * 分页查询会员卡类型以及持有该卡的人数
+	 * 分页查询贵宾卡类型以及持有该卡的人数
 	 * @param req
 	 * @param res
 	 * @param model
@@ -108,7 +114,7 @@ public class CardManageController {
 	}
 	
 	/**
-	 * 会员卡类型下拉框初始化
+	 * 贵宾卡类型下拉框初始化
 	 * @param req
 	 * @param res
 	 * @param model
@@ -136,7 +142,7 @@ public class CardManageController {
 	}
 	
 	/**
-	 * 根据会员卡类型查询出会员卡信息
+	 * 根据贵宾卡类型查询出贵宾卡信息
 	 * @param req
 	 * @param res
 	 * @param model
@@ -182,8 +188,37 @@ public class CardManageController {
 		res.getWriter().print(returnJson.toString());
 	}
 	
+	@RequestMapping(value = "/exportMainConsumeByType.do", method = {RequestMethod.POST, RequestMethod.GET})
+	public void exportMainConsumeByType(HttpServletRequest req, HttpServletResponse res, ModelMap model) throws Exception {
+		res.setCharacterEncoding("UTF-8");
+		res.setContentType("application/vnd.ms-excel");
+		String fileName = "会员卡分类消费明细";
+		res.addHeader("Content-Disposition", "attachment;filename="+ URLEncoder.encode(fileName, "UTF-8") + ".xls");
+		
+		String cardTypeCode = req.getParameter("cardTypeCode");
+		
+		HashMap<String, Object> con = new HashMap<String, Object>();
+		if (cardTypeCode != null && !"".equals(cardTypeCode)) {
+			con.put("cardTypeCode", cardTypeCode);
+		}
+		List<MemberCard> memberCardList = memberCardService.queryMemberCardInfoByType(con);
+		List<MemberTypeBalanceExcelPoi> memberTypeBalanceExcelPoiList = new ArrayList<MemberTypeBalanceExcelPoi>();
+		for (int i = 0; i < memberCardList.size(); i++) {
+			memberTypeBalanceExcelPoiList.add(new MemberTypeBalanceExcelPoi(memberCardList.get(i).getCardId(), 
+					memberCardList.get(i).getHodeCardName(), memberCardList.get(i).getHodeCardPhone(), 
+					memberCardList.get(i).getCreateTime(), memberCardList.get(i).getCardTypeName(), 
+					DateStringUtils.getDoubleFormLong(memberCardList.get(i).getCardBalance(),100,2)));
+		}
+		Map<String, String> publicMap = new HashMap<String, String>();
+		String[] headers = { "卡号", "持卡人", "持卡人联系方式", "开卡日期", "卡类型", "卡余额"};
+		
+		OutputStream out = res.getOutputStream();
+		ExcelPoiUtil.exportExcel("总部会员卡消费明细",publicMap, headers, memberTypeBalanceExcelPoiList, out);
+		out.flush();
+		out.close();
+	}
 	/**
-	 * 新增会员卡类型
+	 * 新增贵宾卡类型
 	 * @param json
 	 * @return
 	 * @throws Exception
@@ -201,7 +236,26 @@ public class CardManageController {
 	}
 	
 	/**
-	 * 新增会员卡
+	 * 更新贵宾卡类型
+	 * 主要用来更新贵宾卡类型
+	 * @param json
+	 * @return
+	 * @throws Exception
+	 */
+	public JSONObject updateCardType(JSONObject json) throws Exception {
+		JSONObject returnJson = new JSONObject();
+		
+		HashMap<String, Object> cond = new HashMap<String, Object>();
+		cond.put("cardTypeName", json.getString("cardTypeName"));
+		cond.put("merchantId", json.getString("merchantId"));
+		cond.put("cardTypeCode", json.getString("cardTypeCode"));
+		cardTypeService.updateCardType(cond);;
+		
+		return returnJson;
+	}
+	
+	/**
+	 * 新增贵宾卡
 	 * @param json
 	 * @return
 	 * @throws Exception
@@ -224,7 +278,7 @@ public class CardManageController {
 	}
 	
 	/**
-	 * 查询会员卡信息
+	 * 查询贵宾卡信息
 	 * @param json
 	 * @return
 	 * @throws Exception
@@ -234,7 +288,7 @@ public class CardManageController {
 		String cardId = json.getString("cardId");
 		List<MemberCard> memberCardList = memberCardService.queryMemberCardInfo(cardId);
 		if (memberCardList.size()<=0) {
-			throw new CCHException("0", "该["+ cardId +"]会员卡不存在");
+			throw new CCHException("0", "该["+ cardId +"]贵宾卡不存在");
 		} else {
 			returnJson.put("cardBalance", DateStringUtils.getDoubleFormLong(memberCardList.get(0).getCardBalance(), 100, 2));
 			returnJson.put("cardTypeCode", memberCardList.get(0).getCardTypeCode());
@@ -247,7 +301,7 @@ public class CardManageController {
 	}
 	
 	/**
-	 * 会员卡消费
+	 * 贵宾卡消费
 	 * @param json
 	 * @return
 	 * @throws Exception
@@ -268,7 +322,6 @@ public class CardManageController {
 		memberCard.setCardId(json.getString("cardId"));
 		memberCard.setCardBalance((long)DateStringUtils.mul(json.getDouble("cost"), 100.0));
 		memberCardService.checkOutByMemberCard(balance, memberCard);
-		
 		
 		return returnJson;
 	}

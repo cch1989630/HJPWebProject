@@ -1,5 +1,6 @@
 package com.hjp.programme.service;
 
+import java.util.HashMap;
 import java.util.List;
 
 import com.hjp.programme.util.Page;
@@ -12,4 +13,6 @@ public interface ICardTypeService {
 	public List<CardType> queryCardTypeNumber(Page page);
 	
 	List<CardType> queryCardType(String merchantId);
+	
+	void updateCardType(HashMap<String, Object> cond);
 }

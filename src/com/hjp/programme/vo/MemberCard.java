@@ -40,7 +40,9 @@ public class MemberCard {
 	private String editStaffName;
 	
 	private Date editTime;
-
+	
+	private String isMonth;
+	
 	public String getCardId() {
 		return cardId;
 	}
@@ -191,6 +193,14 @@ public class MemberCard {
 
 	public void setEditTime(Date editTime) {
 		this.editTime = editTime;
+	}
+
+	public String getIsMonth() {
+		return isMonth;
+	}
+
+	public void setIsMonth(String isMonth) {
+		this.isMonth = isMonth;
 	}
 	
 }
