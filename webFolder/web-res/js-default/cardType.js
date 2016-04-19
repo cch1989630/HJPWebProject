@@ -18,7 +18,7 @@ function editUser() {
 function submitCardType() {
 	var data ={};
 	var submitFunction = "saveCardType";
-	data.cardTypeName = $("#cardTypeName").val();
+	data.cardTypeBalance = $("#cardTypeBalance").val();
 	if (dataType === "edit") {
 		data.cardTypeCode = $("#cardTypeCode").val();
 		submitFunction = "updateCardType";

@@ -9,6 +9,7 @@
     <script type="text/javascript" src="web-res/js-libs/jquery.min.js"></script>
     <script type="text/javascript" src="web-res/js-libs/jquery.easyui.min.js"></script>
     <script type="text/javascript" src="web-res/js-libs/util.js"></script>
+    <script type="text/javascript" src="web-res/js-libs/easyui-lang-zh_CN.js"></script>
     <script type="text/javascript" src="web-res/js-default/cardType.js"></script>
 </head>
 <body>
@@ -21,6 +22,7 @@
                 <th field="cardTypeCode" width="50">卡类型编码</th>
                 <th field="cardTypeName" width="50">卡类型名称</th>
                 <th field="stateName" width="50">状态</th>
+                <th field="cardTypeBalance" width="50">会员卡金额</th>
                 <th field="cardNumber" width="50">持卡会员数</th>
             </tr>
         </thead>
@@ -36,8 +38,8 @@
         <form id="fm" method="post" novalidate>
             <div class="fitem">
             	<input id="cardTypeCode" name="cardTypeCode" style="display:none"/>
-                <label>贵宾卡类型名称:</label>
-                <input id="cardTypeName" name="cardTypeName" class="easyui-textbox" required="true">
+                <label>贵宾卡金额:</label>
+                <input id="cardTypeBalance" name="cardTypeBalance" class="easyui-textbox" required="true">
             </div>
         </form>
     </div>

@@ -8,6 +8,7 @@
     	<result column="CARD_TYPE_NAME" property="cardTypeName" jdbcType="VARCHAR"/>
     	<result column="CARD_NUMBER" property="cardNumber" jdbcType="VARCHAR"/>
     	<result column="STATE_NAME" property="stateName" jdbcType="VARCHAR"/>
+    	<result column="CARD_TYPE_BALANCE" property="cardTypeBalance" jdbcType="DECIMAL"/>
     </resultMap>
     
     <insert id="insertCardType" parameterType="com.hjp.programme.vo.CardType">
@@ -25,6 +26,9 @@
 		    <if test="cardTypeName != null" >
 		        CARD_TYPE_NAME,
 		    </if>
+		    <if test="cardTypeBalance != null" >
+		        CARD_TYPE_BALANCE,
+		    </if>
 		</trim>
 	    <trim prefix="values (" suffix=")" suffixOverrides="," >
 	      	<if test="cardTypeCode != null" >
@@ -39,6 +43,9 @@
 	      	<if test="cardTypeName != null" >
 	        	#{cardTypeName,jdbcType=VARCHAR},
 	      	</if>
+	      	<if test="cardTypeBalance != null" >
+	        	#{cardTypeBalance,jdbcType=DECIMAL},
+	      	</if>
 	     </trim>
     </insert>
     
@@ -48,6 +55,9 @@
   	  		<if test="cardTypeName != null" >
         		CARD_TYPE_NAME = #{cardTypeName,jdbcType=VARCHAR},
       		</if>
+      		<if test="cardTypeBalance != null" >
+        		CARD_TYPE_BALANCE = #{cardTypeBalance,jdbcType=VARCHAR},
+      		</if>
       	</set>
       	where CARD_TYPE_CODE = #{cardTypeCode,jdbcType=VARCHAR}
       	and MERCHANT_ID = #{merchantId,jdbcType=VARCHAR}
@@ -55,7 +65,7 @@
     
     <select id="queryCardTypeNumber" resultMap="CardTypeMap" parameterType="page">
   		SELECT ct.CARD_TYPE_CODE, ct.CARD_TYPE_NAME, ct.MERCHANT_ID, ct.STATE, IFNULL(t.CARD_NUMBER, 0) CARD_NUMBER,
-		CASE ct.STATE
+		ct.CARD_TYPE_BALANCE, CASE ct.STATE
 		WHEN '0' THEN '失效'
 		ELSE '有效' END STATE_NAME
 		FROM td_m_card_type ct LEFT JOIN (SELECT COUNT(mc.CARD_TYPE_CODE) CARD_NUMBER, mc.CARD_TYPE_CODE
@@ -65,7 +75,7 @@
   	</select>
     
     <select id="queryCardType" resultMap="CardTypeMap" parameterType="java.lang.String">
-    	SELECT ct.CARD_TYPE_CODE, ct.CARD_TYPE_NAME, ct.MERCHANT_ID, ct.STATE
+    	SELECT ct.CARD_TYPE_CODE, ct.CARD_TYPE_NAME, ct.MERCHANT_ID, ct.STATE,ct.CARD_TYPE_BALANCE
     	FROM td_m_card_type ct
     	WHERE ct.MERCHANT_ID = #{merchantId,jdbcType=VARCHAR}
     </select>

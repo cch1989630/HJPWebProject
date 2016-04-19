@@ -9,6 +9,7 @@
     <script type="text/javascript" src="web-res/js-libs/jquery.min.js"></script>
     <script type="text/javascript" src="web-res/js-libs/jquery.easyui.min.js"></script>
     <script type="text/javascript" src="web-res/js-libs/util.js"></script>
+    <script type="text/javascript" src="web-res/js-libs/easyui-lang-zh_CN.js"></script>
     <script type="text/javascript" src="web-res/js-default/addStaff.js"></script>
 </head>
 <style>

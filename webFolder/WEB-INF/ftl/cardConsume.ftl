@@ -9,6 +9,8 @@
     <script type="text/javascript" src="web-res/js-libs/jquery.min.js"></script>
     <script type="text/javascript" src="web-res/js-libs/jquery.easyui.min.js"></script>
     <script type="text/javascript" src="web-res/js-libs/util.js"></script>
+    <script type="text/javascript" src="web-res/js-libs/easyui-lang-zh_CN.js"></script>
+    <script type="text/javascript" src="web-res/js-libs/LodopFuncs.js"></script>
     <script type="text/javascript" src="web-res/js-default/cardConsume.js"></script>
 </head>
 <style>
@@ -56,7 +58,7 @@
 		    		</tr>
 		    		<tr>
 		    			<td>门店</td>
-		    			<td><input class="easyui-textbox" value="${merchantName}" data-merchantid="${merchantId}" type="text" name="merchantId" data-options="disabled:true"></input></td>
+		    			<td><input class="easyui-textbox" id="merchantName" value="${merchantName}" data-merchantid="${merchantId}" type="text" name="merchantId" data-options="disabled:true"></input></td>
 		    			<td>操作员</td>
 		    			<td><input id="staffId" value="${staffId}" class="easyui-textbox" type="text" name="staffId" data-options="disabled:true"></input></td>
 		    		</tr>

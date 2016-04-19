@@ -178,5 +178,15 @@ $.extend($.fn.validatebox.defaults.rules, {
         },  
         message:'两次密码不匹配'  
     }  
-             
 }); 
+
+//增加返回选择了那个选项的conbobox
+$.extend($.fn.combobox.methods, {
+    selectedIndex: function (jq, index) {
+        if (!index)
+            index = 0;
+        var data = $(jq).combobox('options').data;
+        var vf = $(jq).combobox('options').valueField;
+        $(jq).combobox('setValue', eval('data[index].' + vf));
+    }
+});

@@ -104,6 +104,7 @@ public class CardManageController {
 			oneObject.put("state", cardTypeList.get(i).getState());
 			oneObject.put("stateName", cardTypeList.get(i).getStateName());
 			oneObject.put("cardNumber", cardTypeList.get(i).getCardNumber());
+			oneObject.put("cardTypeBalance", DateStringUtils.getDoubleFormLong(cardTypeList.get(i).getCardTypeBalance(), 100, 2));
 			cardTypeArray.put(oneObject);
 		}
 		returnJson.put("total", cardTypeArray.length());
@@ -132,6 +133,7 @@ public class CardManageController {
 			JSONObject oneObject = new JSONObject();
 			oneObject.put("id", cardTypeList.get(i).getCardTypeCode());
 			oneObject.put("text", cardTypeList.get(i).getCardTypeName());
+			oneObject.put("cardTypeBalance", DateStringUtils.getDoubleFormLong(cardTypeList.get(i).getCardTypeBalance(), 100, 2));
 			oneObject.put("state", cardTypeList.get(i).getState());
 			cardTypeArray.put(oneObject);
 		}
@@ -227,7 +229,8 @@ public class CardManageController {
 		JSONObject returnJson = new JSONObject();
 		
 		CardType cardType = new CardType();
-		cardType.setCardTypeName(json.getString("cardTypeName"));
+		cardType.setCardTypeName(json.getLong("cardTypeBalance") + "元贵宾卡");
+		cardType.setCardTypeBalance((long)DateStringUtils.mul(json.getLong("cardTypeBalance"), 100.0));
 		cardType.setState("1");
 		cardType.setMerchantId(json.getString("merchantId"));
 		cardTypeService.insertCardType(cardType);
@@ -246,7 +249,8 @@ public class CardManageController {
 		JSONObject returnJson = new JSONObject();
 		
 		HashMap<String, Object> cond = new HashMap<String, Object>();
-		cond.put("cardTypeName", json.getString("cardTypeName"));
+		cond.put("cardTypeName", json.getLong("cardTypeBalance") + "元贵宾卡");
+		cond.put("cardTypeBalance", (long)DateStringUtils.mul(json.getLong("cardTypeBalance"), 100.0));
 		cond.put("merchantId", json.getString("merchantId"));
 		cond.put("cardTypeCode", json.getString("cardTypeCode"));
 		cardTypeService.updateCardType(cond);;

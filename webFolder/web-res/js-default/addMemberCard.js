@@ -27,3 +27,20 @@ function finishAddMemberCard(data) {
 function clearForm(){
 	$('#ff').form('clear');
 }
+
+$(document).ready(function () {
+	$('#cardTypeCode').combobox({
+		onChange: function(newValue,oldValue){
+			var dataArray = $('#cardTypeCode').combobox('getData');
+			var cardTypeBalance = "";
+			for (var i = 0; i < dataArray.length; i++) {
+				if (newValue === dataArray[i].id) {
+					cardTypeBalance = dataArray[i].cardTypeBalance;
+				}
+			}
+			//$('#cardTypeCode').combobox('setValue', cardTypeBalance);
+			$("#cardBalance").numberbox("setValue", cardTypeBalance);
+			//console.info(newValue);
+		}
+	});
+});

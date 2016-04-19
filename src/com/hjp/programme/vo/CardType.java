@@ -13,6 +13,8 @@ public class CardType {
 	private String cardNumber;
 	
 	private String stateName;
+	
+	private Long cardTypeBalance;
 
 	public String getCardTypeCode() {
 		return cardTypeCode;
@@ -60,6 +62,14 @@ public class CardType {
 
 	public void setStateName(String stateName) {
 		this.stateName = stateName;
+	}
+
+	public Long getCardTypeBalance() {
+		return cardTypeBalance;
+	}
+
+	public void setCardTypeBalance(Long cardTypeBalance) {
+		this.cardTypeBalance = cardTypeBalance;
 	}
 	
 }

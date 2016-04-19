@@ -9,6 +9,7 @@
     <script type="text/javascript" src="web-res/js-libs/jquery.min.js"></script>
     <script type="text/javascript" src="web-res/js-libs/jquery.easyui.min.js"></script>
     <script type="text/javascript" src="web-res/js-libs/util.js"></script>
+    <script type="text/javascript" src="web-res/js-libs/easyui-lang-zh_CN.js"></script>
     <script type="text/javascript" src="web-res/js-default/addMemberCard.js"></script>
 </head>
 <style>
@@ -44,7 +45,7 @@
 		    		</tr>
 		    		<tr>
 		    			<td>卡余额</td>
-		    			<td><input class="easyui-numberbox" type="text" id="cardBalance" data-options="required:true"></input></td>
+		    			<td><input class="easyui-numberbox" type="text" id="cardBalance" data-options="required:true,disabled:true"></input></td>
 		    			<td>开卡日期</td>
 		    			<td><input id="createTime" class="easyui-datebox" data-options="disabled:true,formatter:myformatter,parser:myparser"></input></td>
 		    		</tr>
