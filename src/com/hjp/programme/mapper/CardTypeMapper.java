@@ -18,4 +18,8 @@ public interface CardTypeMapper {
 	List<CardType> queryCardType(String merchantId);
 	
 	void updateCardType(HashMap<String, Object> cond);
+	
+	List<CardType> queryCardTypeByCond(HashMap<String, Object> cond);
+	
+	void deleteCardType(HashMap<String, Object> cond);
 }

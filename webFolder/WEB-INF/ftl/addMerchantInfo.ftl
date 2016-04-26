@@ -13,21 +13,36 @@
     <script type="text/javascript" src="web-res/js-default/addMerchantInfo.js"></script>
 </head>
 <body>
-    <table id="dg" title="分店部门信息统计" class="easyui-datagrid" style="width:80%;height:90%"
+	<div class="easyui-panel" style="width:100%;height:30%" title="搜索">
+		<div style="padding:10px 60px 20px 60px">
+		    <form id="ff" method="post">
+		    	<table cellpadding="5">
+		    		<tr>
+		    			<td>部门代码</td>
+		    			<td><input class="easyui-textbox" type="text" id="merchantId" data-options=""></input></td>
+		    			<td>部门名称</td>
+		    			<td><input class="easyui-textbox" type="text" id="merchantName" data-options=""></input></td>
+		    			<td><a href="#" onclick="queryMerchantInfo()" class="easyui-linkbutton" data-options="iconCls:'icon-search'" style="width:80px">搜索</a></td>
+		    		</tr>
+		    	</table>
+		    </form>
+		</div>
+	</div>
+    <table id="dg" title="分店部门信息统计" class="easyui-datagrid" style="width:100%;height:70%"
             url="queryMerchantInfo.do"
             toolbar="#toolbar" pagination="true"
             rownumbers="true" fitColumns="true" singleSelect="true">
         <thead>
             <tr>
-                <th field="merchantId" width="50">分店部门编码</th>
+                <th field="merchantId" width="50">部门代码</th>
                 <th field="merchantName" width="50">分店部门名称</th>
                 <th field="stateName" width="50">状态</th>
             </tr>
         </thead>
     </table>
     <div id="toolbar">
-        <a href="javascript:void(0)" class="easyui-linkbutton" iconCls="icon-add" plain="true" onclick="newUser()">新增分店部门</a>
-        <a href="javascript:void(0)" class="easyui-linkbutton" iconCls="icon-edit" plain="true" onclick="editUser()">修改分店部门</a>
+        <a href="javascript:void(0)" class="easyui-linkbutton" iconCls="icon-add" plain="true" onclick="newMerchant()">新增分店部门</a>
+        <a href="javascript:void(0)" class="easyui-linkbutton" iconCls="icon-edit" plain="true" onclick="editMerchant()">修改分店部门</a>
     </div>
     
     <div id="dlg" class="easyui-dialog" style="width:500px;height:280px;padding:10px 20px"
@@ -35,9 +50,12 @@
         <div class="ftitle"分店部门信息</div>
         <form id="fm" method="post" novalidate>
             <div class="fitem">
-            	<input id="merchantId" name="merchantId" style="display:none"/>
-                <label>分店部门名称:</label>
-                <input id="merchantName" name="merchantName" class="easyui-textbox" required="true">
+            	<label>部门代码:</label>
+            	<input id="selectMerchantId" name="merchantId" class="easyui-textbox" required="true"/>
+            </div>
+            <div class="fitem">
+                <label>部门名称:</label>
+                <input id="selectMerchantName" name="merchantName" class="easyui-textbox" required="true">
             </div>
         </form>
     </div>

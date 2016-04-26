@@ -59,14 +59,14 @@
             rownumbers="true" fitColumns="true" singleSelect="true">
         <thead>
             <tr>
+            	<th field="cardTypeName" width="50">卡类型</th>
                 <th field="cardId" width="50">卡号</th>
                 <th field="hodeCardName" width="50">持卡人</th>
-                <th field="cardTypeName" width="50">卡类型</th>
+                <th field="costTime" width="50">消费日期</th>
                 <th field="cost" width="50">消费金额</th>
                 <th field="merchantName" width="50">消费门店</th>
                 <th field="staffName" width="50">操作员</th>
-                <th field="tradeStaffId" width="50">操作员编号</th>
-                <th field="costTime" width="50">消费日期</th>
+                <th field="costCardBalance" width="50">余额</th>
             </tr>
         </thead>
     </table>

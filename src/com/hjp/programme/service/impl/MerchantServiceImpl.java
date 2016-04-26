@@ -26,8 +26,8 @@ public class MerchantServiceImpl implements IMerchantService {
     private SequenceMapper sequenceMapper;
 	
 	@Override
-	public List<MerchantInfo> queryMerchantInfo(String merchantId) {
-		return merchantMapper.queryMerchantInfo(merchantId);
+	public List<MerchantInfo> queryMerchantInfo(HashMap<String, Object> cond) {
+		return merchantMapper.queryMerchantInfo(cond);
 	}
 
 	@Override
@@ -39,12 +39,21 @@ public class MerchantServiceImpl implements IMerchantService {
 	@Override
 	public void insertMerchantInfo(MerchantInfo merchantInfo, MerchantRegister merchantRegister)
 			throws CCHException {
+		HashMap<String, Object> cond = new HashMap<String, Object>();
+		cond.put("merchantId", merchantInfo.getMerchantId());
+		List<MerchantInfo> existMerchantList = merchantMapper.queryMerchantInfo(cond);
+		if (existMerchantList.size() > 0) {
+			throw new CCHException("0", "您输入的部门代码已存在，请重新输入");
+		}
+		cond.clear();
+		cond.put("merchantName", merchantInfo.getMerchantName());
+		existMerchantList = merchantMapper.queryMerchantInfo(cond);
+		if (existMerchantList.size() > 0) {
+			throw new CCHException("0", "您输入的部门名称已存在，请重新输入");
+		}
+		
 		try {
-			Long childMerchantId = sequenceMapper.nextval("SEQ_MERCHANT_ID");
-			merchantInfo.setMerchantId(childMerchantId.toString());
 			merchantMapper.insertMerchantInfo(merchantInfo);
-			
-			merchantRegister.setChildMerchantId(childMerchantId.toString());
 			merchantMapper.insertMerchantRegister(merchantRegister);
 		} catch (Exception e) {
 			throw new CCHException("0", "新增分店部门失败");
@@ -52,7 +61,13 @@ public class MerchantServiceImpl implements IMerchantService {
 	}
 
 	@Override
-	public void updateMerchantInfo(HashMap<String, Object> cond) {
+	public void updateMerchantInfo(HashMap<String, Object> cond) throws CCHException {
+		HashMap<String, Object> queryCond = new HashMap<String, Object>();
+		queryCond.put("merchantName", cond.get("merchantName"));
+		List<MerchantInfo> existMerchantList = merchantMapper.queryMerchantInfo(queryCond);
+		if (existMerchantList.size() > 0) {
+			throw new CCHException("0", "您输入的部门名称已存在，请重新输入");
+		}
 		merchantMapper.updateMerchantInfo(cond);
 	}
 

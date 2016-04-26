@@ -97,6 +97,9 @@
       		<if test="isMonth != null" >
         		IS_MONTH = #{isMonth,jdbcType=VARCHAR},
       		</if>
+      		<if test="cardId != null" >
+        		CARD_ID = #{cardId,jdbcType=VARCHAR},
+      		</if>
       	</set>
       	where COST_ID = #{costId,jdbcType=VARCHAR}
 	</update>

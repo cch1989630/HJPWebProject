@@ -38,7 +38,7 @@
 	</div>
     <table id="dg" title="贵宾卡信息信息" class="easyui-datagrid" style="width:100%;height:70%"
             url="queryCardByType.do"
-            pagination="true"
+            pagination="true" pageList = "[15,30,45]" pageSize = "15"
             rownumbers="true" fitColumns="true" singleSelect="true">
         <thead>
             <tr>
@@ -51,7 +51,7 @@
             </tr>
         </thead>
     </table>
-    <div id="dlg" class="easyui-dialog" style="width:400px;height:280px;padding:10px 20px"
+    <div id="dlg" class="easyui-dialog" style="width:400px;height:350px;padding:10px 20px"
             closed="true" buttons="#dlg-buttons">
         <div class="ftitle">贵宾卡类型</div>
         <form id="fm" method="post" novalidate>

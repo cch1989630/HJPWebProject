@@ -16,10 +16,8 @@ public class BalanceExcelPoi {
 	
 	private String cardTypeName;
 	
-	private Double costCardBalance;
-
 	public BalanceExcelPoi(String cardId, String hodeCardName, Date createTime,
-			Date costTime, Double cost, String cardTypeName, Double costCardBalance) {
+			Date costTime, Double cost, String cardTypeName) {
 		super();
 		this.cardId = cardId;
 		this.hodeCardName = hodeCardName;
@@ -27,7 +25,6 @@ public class BalanceExcelPoi {
 		this.costTime = costTime;
 		this.cost = cost;
 		this.cardTypeName = cardTypeName;
-		this.costCardBalance = costCardBalance;
 	}
 
 	public String getCardId() {
@@ -78,12 +75,4 @@ public class BalanceExcelPoi {
 		this.cardTypeName = cardTypeName;
 	}
 
-	public Double getCostCardBalance() {
-		return costCardBalance;
-	}
-
-	public void setCostCardBalance(Double costCardBalance) {
-		this.costCardBalance = costCardBalance;
-	}
-	
 }

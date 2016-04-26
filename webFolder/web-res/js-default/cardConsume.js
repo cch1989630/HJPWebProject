@@ -48,7 +48,7 @@ function finishQueryCardInfo(data) {
 		var curr_time = new Date();
 		var strDate = curr_time.getFullYear()+"-";
 		strDate += curr_time.getMonth()+1+"-";
-		strDate += curr_time.getDate()+"-";
+		strDate += curr_time.getDate()+" ";
 		strDate += curr_time.getHours()+":";
 		strDate += curr_time.getMinutes()+":";
 		strDate += curr_time.getSeconds();
@@ -75,8 +75,8 @@ function submitForm(){
 		data.costTime = $("#costTime").val();
 		data.cardBalance = $("#cardBalance").val();
 		data = JSON.stringify(data);
-		var message = "卡号为" + $("#cardId").val() + $('#cardTypeCode').combobox('getText') + ",本次消费金额为" + $("#cost").val() + 
-			"元,本次消费后余额为" + $("#cardBalance").val() + "元,请确认！";
+		var message = $('#cardTypeCode').combobox('getText') + "，卡号为" + $("#cardId").val() + "本次消费金额为" + 
+			$("#cost").val() + "元，本次消费后余额" + $("#cardBalance").val() + "元,请确认！"
 		$.messager.confirm("操作提示", message, function (info) {  
             if (info) {  
                 //alert("确定");

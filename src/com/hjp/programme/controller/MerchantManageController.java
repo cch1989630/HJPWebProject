@@ -51,7 +51,8 @@ public class MerchantManageController {
 		Staff staff = staffService.queryStaffByStaffId(userName);
 		
 		JSONArray merchantArray = new JSONArray();
-		List<MerchantInfo> merchantList = merchantService.queryMerchantInfo(staff.getMerchantId());
+		HashMap<String, Object> cond = new HashMap<String, Object>();
+		List<MerchantInfo> merchantList = merchantService.queryMerchantInfo(cond);
 		for (int i = 0; i < merchantList.size(); i++) {
 			JSONObject oneObject = new JSONObject();
 			oneObject.put("id", merchantList.get(i).getMerchantId());
@@ -68,7 +69,16 @@ public class MerchantManageController {
 		String pageSize = req.getParameter("rows");
 		String currPage = req.getParameter("page");
 		
+		String merchantId = req.getParameter("merchantId");
+		String merchantName = req.getParameter("merchantName");
+		
 		HashMap<String, Object> con = new HashMap<String, Object>();
+		if (merchantId != null && !"".equals(merchantId)) {
+			con.put("merchantId", merchantId);
+		}
+		if (merchantName != null && !"".equals(merchantName)) {
+			con.put("merchantName", merchantName);
+		}
 		Page page = new Page(Integer.parseInt(currPage), Integer.parseInt(pageSize));
 		page.setT(con);
 		
@@ -104,10 +114,12 @@ public class MerchantManageController {
 		JSONObject returnJson = new JSONObject();
 		MerchantInfo merchantInfo = new MerchantInfo();
 		merchantInfo.setMerchantName(json.getString("selectMerchantName"));
+		merchantInfo.setMerchantId(json.getString("selectMerchantId"));
 		merchantInfo.setState("1");
 		
 		MerchantRegister merchantRegister = new MerchantRegister();
 		merchantRegister.setMerchantId(json.getString("merchantId"));
+		merchantRegister.setChildMerchantId(json.getString("selectMerchantId"));
 		merchantService.insertMerchantInfo(merchantInfo, merchantRegister);
 		
 		return returnJson;

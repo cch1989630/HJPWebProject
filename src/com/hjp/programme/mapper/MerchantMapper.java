@@ -12,7 +12,7 @@ import com.hjp.programme.vo.MerchantRegister;
 @Component("merchantMapper")
 public interface MerchantMapper {
 	
-	List<MerchantInfo> queryMerchantInfo(String merchantId);
+	List<MerchantInfo> queryMerchantInfo(HashMap<String, Object> cond);
 	
 	List<MerchantInfo> queryMerchantInfoByPage(Page page);
 	

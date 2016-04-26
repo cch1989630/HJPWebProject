@@ -107,7 +107,7 @@ public class CardManageController {
 			oneObject.put("cardTypeBalance", DateStringUtils.getDoubleFormLong(cardTypeList.get(i).getCardTypeBalance(), 100, 2));
 			cardTypeArray.put(oneObject);
 		}
-		returnJson.put("total", cardTypeArray.length());
+		returnJson.put("total", page.getCountRecord());
 		returnJson.put("rows", cardTypeArray);
 		
 		res.setContentType("text/html;charset=UTF-8");
@@ -175,6 +175,7 @@ public class CardManageController {
 		for (int i = 0; i < memberCardList.size(); i++) {
 			JSONObject oneObject = new JSONObject();
 			oneObject.put("cardId", memberCardList.get(i).getCardId());
+			oneObject.put("cardTypeCode", memberCardList.get(i).getCardTypeCode());
 			oneObject.put("hodeCardName", memberCardList.get(i).getHodeCardName());
 			oneObject.put("hodeCardPhone", memberCardList.get(i).getHodeCardPhone());
 			oneObject.put("createTime", DateStringUtils.getStringFromDate(memberCardList.get(i).getCreateTime(), "yyyy-MM-dd HH:mm:ss"));
@@ -229,8 +230,9 @@ public class CardManageController {
 		JSONObject returnJson = new JSONObject();
 		
 		CardType cardType = new CardType();
-		cardType.setCardTypeName(json.getLong("cardTypeBalance") + "元贵宾卡");
-		cardType.setCardTypeBalance((long)DateStringUtils.mul(json.getLong("cardTypeBalance"), 100.0));
+		cardType.setCardTypeName(json.getString("cardTypeName"));
+		cardType.setCardTypeCode(json.getString("cardTypeCode"));
+		cardType.setCardTypeBalance((long)DateStringUtils.mul(json.getDouble("cardTypeBalance"), 100.0));
 		cardType.setState("1");
 		cardType.setMerchantId(json.getString("merchantId"));
 		cardTypeService.insertCardType(cardType);
@@ -248,12 +250,68 @@ public class CardManageController {
 	public JSONObject updateCardType(JSONObject json) throws Exception {
 		JSONObject returnJson = new JSONObject();
 		
-		HashMap<String, Object> cond = new HashMap<String, Object>();
-		cond.put("cardTypeName", json.getLong("cardTypeBalance") + "元贵宾卡");
-		cond.put("cardTypeBalance", (long)DateStringUtils.mul(json.getLong("cardTypeBalance"), 100.0));
-		cond.put("merchantId", json.getString("merchantId"));
-		cond.put("cardTypeCode", json.getString("cardTypeCode"));
-		cardTypeService.updateCardType(cond);;
+		CardType cardType = new CardType();
+		cardType.setCardTypeName(json.getString("cardTypeName"));
+		cardType.setCardTypeBalance((long)DateStringUtils.mul(json.getLong("cardTypeBalance"), 100.0));
+		cardType.setMerchantId(json.getString("merchantId"));
+		cardType.setCardTypeCode(json.getString("cardTypeCode"));
+		
+		String newCardTypeCode = json.getString("newCardTypeCode");
+		cardTypeService.updateCardType(cardType, newCardTypeCode);
+		
+		return returnJson;
+	}
+	
+	/**
+	 * 更新贵宾卡
+	 * @param json
+	 * @return
+	 * @throws Exception
+	 */
+	public JSONObject updateMemberCard(JSONObject json) throws Exception {
+		JSONObject returnJson = new JSONObject();
+		
+		MemberCard memberCard = new MemberCard();
+		memberCard.setCardId(json.getString("cardId"));
+		memberCard.setCardTypeCode(json.getString("cardTypeCode"));
+		memberCard.setHodeCardName(json.getString("hodeCardName"));
+		memberCard.setHodeCardPhone(json.getString("hodeCardPhone"));
+		memberCard.setCardBalance((long)DateStringUtils.mul(json.getDouble("cardBalance"), 100.0));
+
+		String newCardId = json.getString("newCardId");
+		memberCardService.updateMemberCard(memberCard, newCardId);
+		
+		return returnJson;
+	}
+	
+	/**
+	 * 删除贵宾卡类型
+	 * @param json
+	 * @return
+	 * @throws Exception
+	 */
+	public JSONObject deleteCardType(JSONObject json) throws Exception {
+		JSONObject returnJson = new JSONObject();
+		
+		CardType cardType = new CardType();
+		cardType.setCardTypeCode(json.getString("cardTypeCode"));
+		cardTypeService.deleteCardType(cardType);
+		
+		return returnJson;
+	}
+	
+	/**
+	 * 删除贵宾卡
+	 * @param json
+	 * @return
+	 * @throws Exception
+	 */
+	public JSONObject deleteMemberCard(JSONObject json) throws Exception {
+		JSONObject returnJson = new JSONObject();
+		
+		MemberCard memberCard = new MemberCard();
+		memberCard.setCardId(json.getString("cardId"));
+		memberCardService.deleteMemberCard(memberCard);
 		
 		return returnJson;
 	}

@@ -117,28 +117,50 @@ function formatTime(date) {
 }
 
 function changeParser(s) {
-	 if (!s) return new Date();
-	    var ss = (s.split('-'));
-	    var y = parseInt(ss[0],10);
-	    var m = parseInt(ss[1],10);
-	    var d = parseInt(ss[2],10);
-	    var h = parseInt(ss[3],10);
-	    var min = parseInt(ss[4],10);
-	    var s = parseInt(ss[5],10);
+	if (!s) return new Date();
+    var ss = (s.split(' '));
+    var dd = ss[0].split('-')
+    var y = parseInt(dd[0],10);
+    var m = parseInt(dd[1],10);
+    var d = parseInt(dd[2],10);
+    var mm = ss[1].split(':');
+    var h = parseInt(mm[0],10);
+    var min = parseInt(mm[1],10);
+    var s = parseInt(mm[2],10);
 	    if (!isNaN(y) && !isNaN(m) && !isNaN(d) && !isNaN(h) && !isNaN(min) && !isNaN(s)){
 	        return new Date(y,m-1,d,h,min,s);
 	    }
 }
 
 function myparser(s){
+	if (!s) return new Date();
+    var ss = (s.split(' '));
+    var dd = ss[0].split('-')
+    var y = parseInt(dd[0],10);
+    var m = parseInt(dd[1],10);
+    var d = parseInt(dd[2],10);
+    var mm = ss[1].split(':');
+    var h = parseInt(mm[0],10);
+    var min = parseInt(mm[1],10);
+    var s = parseInt(mm[2],10);
+    if (!isNaN(y) && !isNaN(m) && !isNaN(d) && !isNaN(h) && !isNaN(min) && !isNaN(s)){
+        return new Date(y,m-1,d,h,min,s);
+    } else {
+        return new Date();
+    }
+}
+
+function setparser(s){
     if (!s) return new Date();
-    var ss = (s.split('-'));
-    var y = parseInt(ss[0],10);
-    var m = parseInt(ss[1],10);
-    var d = parseInt(ss[2],10);
-    var h = parseInt(ss[3],10);
-    var min = parseInt(ss[4],10);
-    var s = parseInt(ss[5],10);
+    var ss = (s.split(' '));
+    var dd = ss[0].split('-')
+    var y = parseInt(dd[0],10);
+    var m = parseInt(dd[1],10);
+    var d = parseInt(dd[2],10);
+    var mm = ss[1].split(':');
+    var h = parseInt(mm[0],10);
+    var min = parseInt(mm[1],10);
+    var s = parseInt(mm[2],10);
     if (!isNaN(y) && !isNaN(m) && !isNaN(d) && !isNaN(h) && !isNaN(min) && !isNaN(s)){
         return new Date(y,m-1,d,h,min,s);
     } else {
@@ -150,7 +172,7 @@ function getCurrTime() {
 	var curr_time = new Date();
 	var strDate = curr_time.getFullYear()+"-";
 	strDate += curr_time.getMonth()+1+"-";
-	strDate += curr_time.getDate()+"-";
+	strDate += curr_time.getDate()+" ";
 	strDate += curr_time.getHours()+":";
 	strDate += curr_time.getMinutes()+":";
 	strDate += curr_time.getSeconds();
@@ -161,7 +183,7 @@ $(document).ready(function () {
 	var curr_time = new Date();
 	var strDate = curr_time.getFullYear()+"-";
 	strDate += curr_time.getMonth()+1+"-";
-	strDate += curr_time.getDate()+"-";
+	strDate += curr_time.getDate()+" ";
 	strDate += curr_time.getHours()+":";
 	strDate += curr_time.getMinutes()+":";
 	strDate += curr_time.getSeconds();

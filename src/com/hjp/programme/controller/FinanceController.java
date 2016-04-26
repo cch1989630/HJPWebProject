@@ -56,28 +56,26 @@ public class FinanceController {
 	 * @param model
 	 * @throws Exception
 	 */
-	@RequestMapping(value = "/updateFinanceConsume.do", method = {RequestMethod.POST, RequestMethod.GET})
-	public void updateFinanceConsume(HttpServletRequest req, HttpServletResponse res, ModelMap model) throws Exception {
-		UserDetails userDetails = (UserDetails) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
-		String userName = userDetails.getUsername();
-		Staff staff = staffService.queryStaffByStaffId(userName);
-		String costId = req.getParameter("costId");
-		String cost = req.getParameter("cost");
-		String costCardBalance = req.getParameter("costCardBalance");
+	public JSONObject updateFinanceConsume(JSONObject json) throws Exception {
+		JSONObject returnJson = new JSONObject();
+		
+		String costId = json.getString("costId");
+		String cost = json.getString("cost");
+		String cardId = json.getString("cardId");
+		String costCardBalance = json.getString("costCardBalance");
+		String oldCardId = json.getString("oldCardId");
 		
 		Balance balance = new Balance();
 		balance.setCostId(costId);
 		balance.setCost((long)DateStringUtils.mul(Double.parseDouble(cost), 100.0));
 		balance.setCardBalance((long)DateStringUtils.mul(Double.parseDouble(costCardBalance), 100.0));
-		balance.setEditStaffId(staff.getStaffId());
+		balance.setEditStaffId(json.getString("staffId"));
 		balance.setEditTime(new Date());
+		balance.setCardId(oldCardId);
 		
-		balanceService.updateBalanceByMonth(balance);;
+		balanceService.updateBalanceByMonth(balance, cardId);
 		
-		JSONObject returnObject = new JSONObject();
-		
-		res.setContentType("text/html;charset=UTF-8");
-		res.getWriter().print(returnObject.toString());
+		return returnJson;
 	}
 	
 	/**

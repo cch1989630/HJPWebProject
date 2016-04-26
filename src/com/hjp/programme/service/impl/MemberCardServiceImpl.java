@@ -83,4 +83,44 @@ public class MemberCardServiceImpl implements IMemberCardService {
 		return memberCardMapper.queryMemberCardInfoByType(cond);
 	}
 
+	@Transactional(rollbackFor=CCHException.class)
+	@Override
+	public void updateMemberCard(MemberCard memberCard, String newCardId) throws CCHException {
+		HashMap<String, Object> cond = new HashMap<String, Object>();
+		cond.put("cardId", memberCard.getCardId());
+		List<Balance> balanceList = balanceMapper.queryBalanceInfo(cond);
+		if (balanceList.size() > 0) {
+			throw new CCHException("0", "该贵宾卡存在消费记录，不可修改！");
+		}
+		
+		try {
+			cond.put("cardId", newCardId);
+			cond.put("hodeCardName", memberCard.getHodeCardName());
+			cond.put("cardTypeCode", memberCard.getCardTypeCode());
+			cond.put("hodeCardPhone", memberCard.getHodeCardPhone());
+			cond.put("cardBalance", memberCard.getCardBalance());
+			cond.put("updateCardId", memberCard.getCardId());
+			memberCardMapper.updateMemberCard(cond);
+		} catch (Exception e) {
+			throw new CCHException("0", "贵宾卡修改失败！");
+		}
+	}
+
+	@Transactional(rollbackFor=CCHException.class)
+	@Override
+	public void deleteMemberCard(MemberCard memberCard) throws CCHException {
+		HashMap<String, Object> cond = new HashMap<String, Object>();
+		cond.put("cardId", memberCard.getCardId());
+		List<Balance> balanceList = balanceMapper.queryBalanceInfo(cond);
+		if (balanceList.size() > 0) {
+			throw new CCHException("0", "该贵宾卡存在消费记录，不可修改！");
+		}
+		
+		try {
+			memberCardMapper.deleteMemberCard(cond);
+		} catch (Exception e) {
+			throw new CCHException("0", "贵宾卡删除失败！");
+		}
+	}
+
 }

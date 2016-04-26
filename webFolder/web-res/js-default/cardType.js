@@ -10,21 +10,29 @@ function editUser() {
 		$('#dlg').dialog('open').dialog('center').dialog('setTitle', '修改贵宾卡类型');
 		$('#fm').form('load', {
 			cardTypeName:row.cardTypeName,
-			cardTypeCode:row.cardTypeCode
+			cardTypeCode:row.cardTypeCode,
+			cardTypeBalance:row.cardTypeBalance
 		});
+		$("#oldCardTypeCode").val(row.cardTypeCode);
 		dataType = "edit";
 	}
 }
 function submitCardType() {
-	var data ={};
-	var submitFunction = "saveCardType";
-	data.cardTypeBalance = $("#cardTypeBalance").val();
-	if (dataType === "edit") {
+	if($("#fm").form('validate')) {
+		var data ={};
+		var submitFunction = "saveCardType";
+		data.cardTypeBalance = $("#cardTypeBalance").val();
 		data.cardTypeCode = $("#cardTypeCode").val();
-		submitFunction = "updateCardType";
+		data.cardTypeName = $("#cardTypeName").val();
+		
+		if (dataType === "edit") {
+			data.cardTypeCode = $("#oldCardTypeCode").val();
+			data.newCardTypeCode = $("#cardTypeCode").val();
+			submitFunction = "updateCardType";
+		}
+		data = JSON.stringify(data);
+		jqueryAjaxData("CardManageController", submitFunction, data, finishSubmitCardType);
 	}
-	data = JSON.stringify(data);
-	jqueryAjaxData("CardManageController", submitFunction, data, finishSubmitCardType);
 }
 
 function finishSubmitCardType(data) {
@@ -35,26 +43,25 @@ function finishSubmitCardType(data) {
 	}
 }
 
-function destroyUser() {
+function destoryCardType() {
 	var row = $('#dg').datagrid('getSelected');
 	if (row) {
-		$.messager.confirm('Confirm',
-				'Are you sure you want to destroy this user?', function(r) {
-					if (r) {
-						$.post('destroy_user.php', {
-							id : row.id
-						}, function(result) {
-							if (result.success) {
-								$('#dg').datagrid('reload'); // reload the
-																// user data
-							} else {
-								$.messager.show({ // show error message
-									title : 'Error',
-									msg : result.errorMsg
-								});
-							}
-						}, 'json');
-					}
-				});
+		$.messager.confirm('提示', '你确定删除该贵宾卡类型么？', function(r) {
+			if (r) {
+				var data ={};
+				data.cardTypeCode = row.cardTypeCode;
+				data = JSON.stringify(data);
+				jqueryAjaxData("CardManageController", "deleteCardType", data, finishDeleteCardType);
+			}
+		});
+	}
+}
+
+function finishDeleteCardType(data) {
+	var ret = eval(data);
+	var message = "删除贵宾卡类型成功";
+	if(ret.state === 1) {
+		showMessage("成功",message,"show");
+		$("#dg").datagrid('reload');
 	}
 }

@@ -82,7 +82,7 @@ public class BalanceController {
 		String endTime = req.getParameter("endTime");
 		
 		HashMap<String, Object> con = new HashMap<String, Object>();
-		con.put("childMerchantId", staff.getChildMerchantId());
+		con.put("costMerchantId", staff.getChildMerchantId());
 		if (beginTime != null && !"".equals(beginTime)) {
 			con.put("beginTime", beginTime);
 		}
@@ -276,7 +276,7 @@ public class BalanceController {
 		for (int i = 0; i < memberCardList.size(); i++) {
 			balanceExcelPoiList.add(new BalanceExcelPoi(memberCardList.get(i).getCardId(), memberCardList.get(i).getHodeCardName(), memberCardList.get(i).getCreateTime(),
 					memberCardList.get(i).getCostTime(), DateStringUtils.getDoubleFormLong(memberCardList.get(i).getCost(), 100, 2), 
-					memberCardList.get(i).getCardTypeName(), DateStringUtils.getDoubleFormLong(memberCardList.get(i).getCostCardBalance(),100,2)));
+					memberCardList.get(i).getCardTypeName()));
 		}
 		
 		Map<String, String> publicMap = new HashMap<String, String>();
@@ -284,7 +284,7 @@ public class BalanceController {
 		publicMap.put("操作日期", DateStringUtils.getStringFromDate(new Date(), "yyyy-MM-dd HH:mm:ss"));
 		publicMap.put("操作员", staff.getStaffId());
 		publicMap.put("总计", DateStringUtils.getDoubleFormLong(balance.getAllCost(),100,2) + "");
-		String[] headers = { "卡号", "持卡人", "开卡日期", "消费日期", "消费金额", "卡类型", "卡余额"};
+		String[] headers = { "卡号", "持卡人", "开卡日期", "消费日期", "消费金额", "卡类型"};
 		
 		OutputStream out = res.getOutputStream();
 		ExcelPoiUtil.exportExcel("门店会员卡消费明细",publicMap, headers, balanceExcelPoiList, out);

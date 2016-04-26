@@ -63,14 +63,28 @@
       	where MERCHANT_ID = #{merchantId,jdbcType=VARCHAR}
     </update>
     
-    <select id="queryMerchantInfo" resultMap="MerchantInfoMap" parameterType="java.lang.String">
+    <select id="queryMerchantInfo" resultMap="MerchantInfoMap" parameterType="java.util.HashMap">
     	SELECT MERCHANT_ID, MERCHANT_NAME, STATE
 		FROM td_m_merchant_info 
+		where 1=1
+		<if test="merchantId != null" >
+        	and MERCHANT_ID = #{merchantId,jdbcType=VARCHAR}
+      	</if>
+      	<if test="merchantName != null" >
+        	and MERCHANT_NAME = #{merchantName,jdbcType=VARCHAR}
+      	</if>
     </select>
     
     <select id="queryMerchantInfoByPage" resultMap="MerchantInfoMap" parameterType="page">
     	SELECT MERCHANT_ID, MERCHANT_NAME, STATE
-		FROM td_m_merchant_info 
+		FROM td_m_merchant_info
+		where 1=1
+		<if test="t.merchantId != null" >
+        	and MERCHANT_ID = #{t.merchantId,jdbcType=VARCHAR}
+      	</if>
+      	<if test="t.merchantName != null" >
+        	and MERCHANT_NAME like '%${t.merchantName}%'
+      	</if>
     </select>
     
 </mapper>

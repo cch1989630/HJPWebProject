@@ -45,7 +45,6 @@
                 <th field="createTime" width="50">开卡日期</th>
                 <th field="cost" width="50">消费金额</th>
                 <th field="costTime" width="50">消费日期</th>
-                <th field="costCardBalance" width="50">卡余额</th>
             </tr>
         </thead>
     </table>

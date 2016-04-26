@@ -30,22 +30,34 @@
     <div id="toolbar">
         <a href="javascript:void(0)" class="easyui-linkbutton" iconCls="icon-add" plain="true" onclick="newUser()">新增会员类型</a>
         <a href="javascript:void(0)" class="easyui-linkbutton" iconCls="icon-edit" plain="true" onclick="editUser()">修改会员类型</a>
+    	<a href="javascript:void(0)" class="easyui-linkbutton" iconCls="icon-remove" plain="true" onclick="destoryCardType()" style="width:90px">删除</a>
     </div>
     
-    <div id="dlg" class="easyui-dialog" style="width:400px;height:280px;padding:10px 20px"
+    <div id="dlg" class="easyui-dialog" style="width:500px;height:300px;padding:10px 20px"
             closed="true" buttons="#dlg-buttons">
         <div class="ftitle">贵宾卡类型</div>
-        <form id="fm" method="post" novalidate>
-            <div class="fitem">
-            	<input id="cardTypeCode" name="cardTypeCode" style="display:none"/>
-                <label>贵宾卡金额:</label>
-                <input id="cardTypeBalance" name="cardTypeBalance" class="easyui-textbox" required="true">
-            </div>
+        <input id="oldCardTypeCode" name="oldCardTypeCode" style="display:none"/>
+        <form id="fm" method="post">
+        	<table cellpadding="5">
+        		<tr>
+        			<td>编码:</td>
+        			<td><input id="cardTypeCode" name="cardTypeCode" class="easyui-textbox" required="true"></td>
+        		</tr>
+        		<tr>
+        			<td>贵宾卡类型:</td>
+        			<td><input id="cardTypeName" name="cardTypeName" class="easyui-textbox" required="true"></td>
+        		</tr>
+        		<tr>
+        			<td>贵宾卡金额:</td>
+        			<td><input id="cardTypeBalance" name="cardTypeBalance" class="easyui-textbox" required="true"></td>
+        		</tr>
+        	</table>
         </form>
     </div>
     <div id="dlg-buttons">
         <a href="javascript:void(0)" class="easyui-linkbutton c6" iconCls="icon-ok" onclick="submitCardType()" style="width:90px">保存</a>
         <a href="javascript:void(0)" class="easyui-linkbutton" iconCls="icon-cancel" onclick="javascript:$('#dlg').dialog('close')" style="width:90px">取消</a>
+        <a href="javascript:void(0)" class="easyui-linkbutton" iconCls="icon-remove" plain="true" onclick="destoryCardType()" style="width:90px">删除</a>
     </div>
     <style type="text/css">
         #fm{

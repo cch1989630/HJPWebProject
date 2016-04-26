@@ -15,37 +15,54 @@ function queryMemberCardBalance() {
 	}
 }
 
+function editFinanceConsume() {
+	var row = $('#dg').datagrid('getSelected');
+	if (row) {
+		$('#dlg').dialog('open').dialog('center').dialog('setTitle', '修改会员卡消费');
+		$('#fm').form('load', {
+			cardId1:row.cardId,
+			staffName:row.staffName,
+			cost1:row.cost,
+			costCardBalance:row.costCardBalance,
+			merchantName:row.merchantName
+		});
+		$('#costTime1').datebox('setValue', row.costTime);
+		$('#editTime').datebox('setValue', getCurrTime());
+		$("#editStaffName").textbox('setValue', $("#loginStaffName").val());
+		$("#oldCardId").val(row.cardId);
+		$("#costId").val(row.costId);
+	}
+}
+
+function submitFinanceConsume() {
+	if($("#ff").form('validate')) {
+		var data ={};
+		data.cardId = $("#cardId1").textbox("getValue");
+		data.oldCardId = $("#oldCardId").val();
+		data.cost = $("#cost1").numberbox("getValue");
+		data.costCardBalance = $("#costCardBalance").numberbox("getValue");
+		data.costId = $("#costId").val();
+		data = JSON.stringify(data);
+		jqueryAjaxData("FinanceController", "updateFinanceConsume", data, finishSubmitFinanceConsume);
+	}
+}
+
+function finishSubmitFinanceConsume(data) {
+	var ret = eval(data);
+	if(ret.state === 1) {
+		showMessage("成功","修改成功","show");
+		$("#dg").datagrid('reload');
+		$('#dlg').dialog('close');
+	}
+}
+
 $(document).ready(function () {
-	$('#dg').edatagrid({
-	    updateUrl: 'updateFinanceConsume.do',
-	    onBeforeEdit: function(index,row){
-	    	//console.info(row);
-	    	//$('#dg').datagrid('selectRow', index).datagrid('beginEdit', index);
-	    	// 得到单元格对象,index指哪一行,field跟定义列的那个一样
-	    	var rowEdit = $('#dg').datagrid('getSelected');
-	    	//var $input = cellEdit.target; // 得到文本框对象
-	    	//$input.val('aaa'); // 设值
-	    	//$input.prop('readonly',true); 
-	    	//$('#dg').datagrid('unselectAll');
-	    	if (rowEdit.isMonth === "1") {
-	    		$('#dg').datagrid('cancelEdit',{index:index});
-			}
-	    },
-	    onEdit: function(index,row) {
-	    	//console.info(row);
-	    },
-	    onSuccess: function(index,row) {
-	    	//console.info(row);
-	    	//后台更新成功后需要刷新页面显示修改的结果
-	    	$("#dg").datagrid('reload');
-	    	/*
-	    	var row = $('#dg').datagrid("selectRow", index).datagrid("getSelected");
-	    	row.editStaffId = $("#loginStaffId").val();
-	    	row.editStaffName = $("#loginStaffName").val();
-	    	row.editTime = getCurrTime();
-	    	$('#dg').datagrid('updateRow', row);
-	    	*/
-	    }
+	$("#cost1").numberbox({
+		onChange:function(newValue,oldValue){
+			var changeValue = parseFloat(newValue) - parseFloat(oldValue);
+			var costCardBalance = parseFloat($("#costCardBalance").val());
+			$("#costCardBalance").textbox('setValue',costCardBalance - changeValue);
+		},
 	});
 	
 });

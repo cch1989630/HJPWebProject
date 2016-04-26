@@ -46,7 +46,7 @@ public class BalanceServiceImpl implements IBalanceService {
 
 	@Transactional(rollbackFor=CCHException.class)
 	@Override
-	public void updateBalanceByMonth(Balance balance) throws CCHException {
+	public void updateBalanceByMonth(Balance balance, String newCardId) throws CCHException {
 		HashMap<String, Object> cond = new HashMap<String, Object>();
 		cond.put("costId", balance.getCostId());
 		List<Balance> updateBalanceList = balanceMapper.queryBalanceInfo(cond);
@@ -58,39 +58,59 @@ public class BalanceServiceImpl implements IBalanceService {
 			throw new CCHException("0", "不存在该消费记录，请刷新页面重试");
 		}
 		
+		List<MemberCard> existMemberCardList = memberCardMapper.queryMemberCardInfo(newCardId);
+		if (existMemberCardList.size() <= 0) {
+			throw new CCHException("0", "不存在[" + newCardId + "]该贵宾卡，请重新输入");
+		}
+		
 		try {
-			cond.clear();
-			cond.put("cardId", updateBalanceList.get(0).getCardId());
-			cond.put("beginTime", updateBalanceList.get(0).getCostTime());
-			List<Balance> afterCostBalanceList = balanceMapper.queryBalanceInfo(cond);
-			long changeBalance = balance.getCardBalance() - updateBalanceList.get(0).getCardBalance();
 			cond.clear();
 			cond.put("cost", balance.getCost());
 			cond.put("costId", balance.getCostId());
 			cond.put("cardBalance", balance.getCardBalance());
 			cond.put("editStaffId", balance.getEditStaffId());
 			cond.put("editTime", balance.getEditTime());
-			balanceMapper.updateBalance(cond);
-			for (int i = 0; i < afterCostBalanceList.size(); i++) {
-				if (afterCostBalanceList.get(i).getIsMonth().equals("1")) {
-					continue;
-				} else {
-					cond.clear();
-					cond.put("costId", afterCostBalanceList.get(i).getCostId());
-					cond.put("cardBalance", afterCostBalanceList.get(i).getCardBalance() + changeBalance);
-					balanceMapper.updateBalance(cond);
-				}
+			//当输入了新的卡号时，需要进行更新那条数据的cardId
+			if (balance.getCardId().equals(newCardId)) {
+				Long changeBalance = balance.getCardBalance() - updateBalanceList.get(0).getCardBalance();
+				updateBalanceStream(changeBalance, updateBalanceList.get(0));
+			} else {
+				cond.put("cardId", newCardId);
+				//将最开始的消费记录的cardId，后面发生的消费余额都增加cost
+				updateBalanceStream(updateBalanceList.get(0).getCost(), updateBalanceList.get(0));
+				Balance updateBalance = new Balance();
+				updateBalance.setCardId(newCardId);
+				updateBalance.setCostTime(updateBalanceList.get(0).getCostTime());
+				updateBalanceStream(0-updateBalanceList.get(0).getCost(), updateBalance);
 			}
-			
-			MemberCard memberCard = new MemberCard();
-			memberCard.setCardId(updateBalanceList.get(0).getCardId());
-			memberCard.setCardBalance(0 - changeBalance);
-			memberCardMapper.updateMemberCardByCost(memberCard);
+			balanceMapper.updateBalance(cond);
 			
 		} catch (Exception e) {
 			throw new CCHException("0", "修改会员卡消费失败");
 		}
 		
+	}
+	
+	public void updateBalanceStream(Long changeBalance, Balance updateBalance) {
+		HashMap<String, Object> cond = new HashMap<String, Object>();
+		cond.put("cardId", updateBalance.getCardId());
+		cond.put("beginTime", updateBalance.getCostTime());
+		List<Balance> afterCostBalanceList = balanceMapper.queryBalanceInfo(cond);
+		for (int i = 0; i < afterCostBalanceList.size(); i++) {
+			if (afterCostBalanceList.get(i).getIsMonth().equals("1")) {
+				continue;
+			} else {
+				cond.clear();
+				cond.put("costId", afterCostBalanceList.get(i).getCostId());
+				cond.put("cardBalance", afterCostBalanceList.get(i).getCardBalance() + changeBalance);
+				balanceMapper.updateBalance(cond);
+			}
+		}
+		
+		MemberCard memberCard = new MemberCard();
+		memberCard.setCardId(updateBalance.getCardId());
+		memberCard.setCardBalance(0 - changeBalance);
+		memberCardMapper.updateMemberCardByCost(memberCard);
 	}
 
 }

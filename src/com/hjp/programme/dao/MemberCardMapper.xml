@@ -140,7 +140,7 @@
 			AND mc.CARD_TYPE_CODE = #{t.cardTypeCode,jdbcType=VARCHAR}
 		</if>
 		<if test="t.hodeCardName != null" >
-			AND mc.HODE_CARD_NAME like %#{t.hodeCardName,jdbcType=VARCHAR}%
+			AND mc.HODE_CARD_NAME like '%${t.hodeCardName}%'
 		</if>
 		<if test="t.openTime != null" >
 			<![CDATA[
@@ -210,7 +210,7 @@
 			AND mc.CARD_TYPE_CODE = #{cardTypeCode,jdbcType=VARCHAR}
 		</if>
 		<if test="hodeCardName != null" >
-			AND mc.HODE_CARD_NAME like %#{hodeCardName,jdbcType=VARCHAR}%
+			AND mc.HODE_CARD_NAME like '%${hodeCardName}%'
 		</if>
 		<if test="openTime != null" >
 			<![CDATA[
@@ -250,5 +250,31 @@
     	UPDATE tf_f_member_card SET CARD_BALANCE = CARD_BALANCE - #{cardBalance,jdbcType=DECIMAL} 
     	WHERE CARD_ID = #{cardId,jdbcType=VARCHAR}
     </update>
+    
+    <update id="updateMemberCard" parameterType="java.util.HashMap">
+  		update tf_f_member_card
+  		<set>
+  	  		<if test="cardId != null" >
+        		CARD_ID = #{cardId,jdbcType=VARCHAR},
+      		</if>
+      		<if test="hodeCardName != null" >
+        		HODE_CARD_NAME = #{hodeCardName,jdbcType=VARCHAR},
+      		</if>
+      		<if test="cardTypeCode != null" >
+        		CARD_TYPE_CODE = #{cardTypeCode,jdbcType=VARCHAR},
+      		</if>
+      		<if test="hodeCardPhone != null" >
+        		HODE_CARD_PHONE = #{hodeCardPhone,jdbcType=VARCHAR},
+      		</if>
+      		<if test="cardBalance != null" >
+        		CARD_BALANCE = #{cardBalance,jdbcType=DECIMAL},
+      		</if>
+      	</set>
+      	where CARD_ID = #{updateCardId,jdbcType=VARCHAR}
+	</update>
+	
+	<delete id="deleteMemberCard" parameterType="java.util.HashMap">
+		DELETE from tf_f_member_card WHERE card_id = #{cardId,jdbcType=VARCHAR}
+	</delete>
     
 </mapper>

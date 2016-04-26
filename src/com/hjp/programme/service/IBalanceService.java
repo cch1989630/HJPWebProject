@@ -15,5 +15,5 @@ public interface IBalanceService {
 	
 	List<Balance> queryBalanceInfo(HashMap<String, Object> cond);
 	
-	void updateBalanceByMonth(Balance balance) throws CCHException;
+	void updateBalanceByMonth(Balance balance, String newCardId) throws CCHException;
 }

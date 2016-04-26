@@ -86,7 +86,7 @@ public class StaffManageController {
 			oneObject.put("createTime", DateStringUtils.getStringFromDate(staffList.get(i).getCreateTime(), "yyyy-MM-dd HH:mm:ss"));
 			staffArray.put(oneObject);
 		}
-		returnJson.put("total", staffArray.length());
+		returnJson.put("total", page.getCountRecord());
 		returnJson.put("rows", staffArray);
 		
 		res.setContentType("text/html;charset=UTF-8");

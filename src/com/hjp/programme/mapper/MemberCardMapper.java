@@ -23,4 +23,8 @@ public interface MemberCardMapper {
 	List<MemberCard> queryMemberCardBalance(HashMap<String, Object> cond);
 	
 	List<MemberCard> queryMemberCardInfoByType(HashMap<String, Object> cond);
+	
+	void updateMemberCard(HashMap<String, Object> cond);
+	
+	void deleteMemberCard(HashMap<String, Object> cond);
 }

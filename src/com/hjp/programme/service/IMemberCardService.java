@@ -22,4 +22,8 @@ public interface IMemberCardService {
 	List<MemberCard> queryMemberCardBalance(HashMap<String, Object> cond);
 	
 	List<MemberCard> queryMemberCardInfoByType(HashMap<String, Object> cond);
+	
+	void updateMemberCard(MemberCard memberCard, String newCardId) throws CCHException;
+	
+	void deleteMemberCard(MemberCard memberCard) throws CCHException;
 }

@@ -84,6 +84,7 @@
                 <th field="staffName" width="50">操作员</th>
                 <th field="costTime" width="50">消费日期</th>
                 <th field="cost" width="50">消费金额</th>
+                <th field="costCardBalance" width="50">余额</th>
             </tr>
         </thead>
     </table>
