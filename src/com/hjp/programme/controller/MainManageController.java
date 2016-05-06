@@ -70,6 +70,7 @@ public class MainManageController {
 		} else {
 			model.put("menuRoleCode", "ROLE_STORE");
 		}
+		model.put("merchantName", staff.getMerchantName());
 		
 		return "welcome";
 	}

@@ -73,7 +73,7 @@
  
 <body class="easyui-layout">
     <div region="south" border="true" split="true" style="overflow: hidden; height: 40px;">
-        <div class="footer">版权所有：花津浦</a></div>
+        <div class="footer">当前登录部门：${merchantName}</a></div>
     </div>
     <div region="west" split="true" title="导航菜单" style="width: 200px;">
     	<div id="aa" class="easyui-accordion" style="position: absolute; top: 27px; left: 0px; right: 0px; bottom: 0px;">
@@ -87,7 +87,9 @@
 			 	</div>
 		 	<#else>
 		 		<div title="门店贵宾卡管理" iconcls="icon-save" style="overflow: auto; padding: 10px;">
+		 			<!--
 			    	<li><a target="mainFrame" copyhref="cardConsume.do">贵宾卡消费</a></li>
+			    	-->
 			    	<li><a target="mainFrame" copyhref="childMerchantConsume.do">门店消费查询</a></li>
 			    	<li><a target="mainFrame" copyhref="memberCardConsume.do">贵宾卡消费查询</a></li>
 			    	<li><a target="mainFrame" copyhref="changeSelfPassword.do">修改密码</a></li>

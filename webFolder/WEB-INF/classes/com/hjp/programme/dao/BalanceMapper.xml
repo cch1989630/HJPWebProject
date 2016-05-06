@@ -77,6 +77,16 @@
     <update id="updateBalanceMonth" parameterType="java.util.HashMap">
     	update TF_B_BALANCE set IS_MONTH = #{isMonth,jdbcType=VARCHAR}
     	where MERCHANT_ID = #{merchantId,jdbcType=VARCHAR}
+    	<if test="beginTime != null" >
+			<![CDATA[
+			and COST_TIME >= DATE_FORMAT(#{beginTime,jdbcType=VARCHAR},'%Y-%m-%d %H:%i:%s')
+			]]>
+		</if>
+		<if test="endTime != null" >
+			<![CDATA[
+			and COST_TIME <= DATE_FORMAT(#{endTime,jdbcType=VARCHAR},'%Y-%m-%d %H:%i:%s')
+			]]>
+		</if>
     </update>
     
     <update id="updateBalance" parameterType="java.util.HashMap">

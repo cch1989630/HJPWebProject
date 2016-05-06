@@ -13,6 +13,8 @@ function queryMemberCardBalance() {
 
 function monthCheckOut() {
 	var data ={};
+	data.beginTime = $('#beginTime').datebox('getValue');
+	data.endTime = $('#endTime').datebox('getValue');
 	data = JSON.stringify(data);
 	jqueryAjaxData("FinanceController", "monthCheckOut", data, finishMonthCheckOut);
 }

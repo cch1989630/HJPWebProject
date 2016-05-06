@@ -1,7 +1,7 @@
 var dataType;
 function newMemberCard() {
 	$('#dlg').dialog('open').dialog('center').dialog('setTitle', '新增贵宾卡');
-	$('#fm').form('clear');
+	$('#ff').form('clear');
 	$('#memberCreateTime').datebox('setValue', getCurrTime());
 	dataType = 'save';
 }

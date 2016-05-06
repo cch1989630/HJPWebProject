@@ -159,12 +159,21 @@ public class CardManageController {
 		String pageSize = req.getParameter("rows");
 		String currPage = req.getParameter("page");
 		
+		String sort = req.getParameter("sort");
+		String order = req.getParameter("order");
+		
 		String cardTypeCode = req.getParameter("cardTypeCode");
 		
 		HashMap<String, Object> con = new HashMap<String, Object>();
 		//con.put("merchantId", staff.getMerchantId());
 		if (cardTypeCode != null && !"".equals(cardTypeCode)) {
 			con.put("cardTypeCode", cardTypeCode);
+		}
+		if (sort != null && !"".equals(sort)) {
+			con.put("sort", sort);
+		}
+		if (order != null && !"".equals(order)) {
+			con.put("order", order);
 		}
 		Page page = new Page(Integer.parseInt(currPage), Integer.parseInt(pageSize));
 		page.setT(con);

@@ -4,6 +4,10 @@ import java.util.Date;
 
 public class MemberBalanceExcelPoi {
 	
+	private String cardTypeName;
+	
+	private String cardId;
+	
 	private String merchantName;
 	
 	private String staffName;
@@ -14,9 +18,11 @@ public class MemberBalanceExcelPoi {
 	
 	private Double costCardBalance;
 
-	public MemberBalanceExcelPoi(String merchantName, String staffName,
+	public MemberBalanceExcelPoi(String cardTypeName, String cardId, String merchantName, String staffName,
 			Date costTime, Double cost, Double costCardBalance) {
 		super();
+		this.cardTypeName = cardTypeName;
+		this.cardId = cardId;
 		this.merchantName = merchantName;
 		this.staffName = staffName;
 		this.costTime = costTime;
@@ -62,6 +68,22 @@ public class MemberBalanceExcelPoi {
 
 	public void setCostCardBalance(Double costCardBalance) {
 		this.costCardBalance = costCardBalance;
+	}
+
+	public String getCardTypeName() {
+		return cardTypeName;
+	}
+
+	public void setCardTypeName(String cardTypeName) {
+		this.cardTypeName = cardTypeName;
+	}
+
+	public String getCardId() {
+		return cardId;
+	}
+
+	public void setCardId(String cardId) {
+		this.cardId = cardId;
 	}
 	
 }

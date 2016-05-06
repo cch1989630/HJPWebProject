@@ -10,6 +10,7 @@
     <script type="text/javascript" src="web-res/js-libs/jquery.easyui.min.js"></script>
     <script type="text/javascript" src="web-res/js-libs/util.js"></script>
     <script type="text/javascript" src="web-res/js-libs/easyui-lang-zh_CN.js"></script>
+    <script type="text/javascript" src="web-res/js-libs/LodopFuncs.js"></script>
     <script type="text/javascript" src="web-res/js-default/memberCardConsume.js"></script>
 </head>
 <body>
@@ -35,7 +36,6 @@
                     		</input>
                     	</td>
                     	<td><a href="#" onclick="queryMemberCardBalance()" class="easyui-linkbutton" data-options="iconCls:'icon-search'" style="width:80px">搜索</a></td>
-                    	<td><a href="#" onclick="exportExcl()" class="easyui-linkbutton" data-options="iconCls:'icon-save'" style="width:80px">导出</a></td>
 		    		</tr>
 		    		<tr>
 		    			<td>消费日期(起)</td>
@@ -44,6 +44,7 @@
 		    			<td><input id="endTime" class="easyui-datebox" data-options="formatter:endTimeFormatter,parser:changeParser"></input></td>
 		    			<td>开卡日期</td>
 		    			<td><input id="openTime" class="easyui-datebox" data-options="formatter:formatTime,parser:changeParser,disabled:true"></input></td>
+		    			<td><a href="#" onclick="exportExcl()" class="easyui-linkbutton" data-options="iconCls:'icon-save'" style="width:80px">导出</a></td>
 		    		</tr>
 		    		<tr>
 		    			<td>总计</td>
@@ -54,7 +55,7 @@
 		</div>
 	</div>
     <table id="dg" title="贵宾卡消费信息" class="easyui-datagrid" style="width:100%;height:70%"
-            url="queryMemberCardBalance.do"
+            url="queryMemberCardBalance.do" toolbar="#toolbar"
             pagination="true" pageList = "[15,30,45]" pageSize = "15"
             rownumbers="true" fitColumns="true" singleSelect="true">
         <thead>
@@ -70,6 +71,9 @@
             </tr>
         </thead>
     </table>
+    <div id="toolbar">
+        <a href="javascript:void(0)" class="easyui-linkbutton" plain="true" onclick="printBalance()">打印该条消费记录</a>
+    </div>
     <div id="dlg" class="easyui-dialog" style="width:400px;height:280px;padding:10px 20px"
             closed="true" buttons="#dlg-buttons">
         <div class="ftitle">贵宾卡类型</div>

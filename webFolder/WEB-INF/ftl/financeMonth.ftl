@@ -19,9 +19,9 @@
 		    	<table cellpadding="5">
 		    		<tr>
 		    			<td>消费日期(起)</td>
-		    			<td><input id="beginTime" class="easyui-datebox" data-options="formatter:beginTimeFormatter,parser:changeParser"></input></td>
+		    			<td><input id="beginTime" class="easyui-datebox" data-options="editable:false,formatter:beginTimeFormatter,parser:changeParser"></input></td>
 		    			<td>消费日期(止)</td>
-		    			<td><input id="endTime" class="easyui-datebox" data-options="formatter:endTimeFormatter,parser:changeParser"></input></td>
+		    			<td><input id="endTime" class="easyui-datebox" data-options="editable:false,formatter:endTimeFormatter,parser:changeParser"></input></td>
 		    			<td><a href="#" onclick="queryMemberCardBalance()" class="easyui-linkbutton" data-options="iconCls:'icon-search'" style="width:80px">搜索</a></td>
 		    			<td><a href="#" onclick="monthCheckOut()" class="easyui-linkbutton" data-options="iconCls:'icon-save'" style="width:80px">月结</a></td>
 		    		</tr>

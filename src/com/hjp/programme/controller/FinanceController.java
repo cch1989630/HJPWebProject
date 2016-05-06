@@ -87,9 +87,19 @@ public class FinanceController {
 	public JSONObject monthCheckOut(JSONObject json) throws Exception {
 		JSONObject returnJson = new JSONObject();
 		
+		String beginTime = json.getString("beginTime");
+		String endTime = json.getString("endTime");
+		
 		HashMap<String, Object> cond = new HashMap<String, Object>();
 		cond.put("merchantId", json.get("merchantId"));
 		cond.put("isMonth", "1");
+		if (beginTime != null && !"".equals(beginTime)) {
+			cond.put("beginTime", beginTime);
+		}
+		if (endTime != null && !"".equals(endTime)) {
+			cond.put("endTime", endTime);
+		}
+		
 		balanceService.updateBalanceMonth(cond);
 		
 		return returnJson;

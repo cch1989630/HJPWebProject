@@ -234,6 +234,30 @@
 		<if test="t.cardTypeCode != null" >
 			AND mc.CARD_TYPE_CODE = #{t.cardTypeCode,jdbcType=VARCHAR}
 		</if>
+		<if test="t.sort != null" >
+			<choose>
+				<when test='t.sort == "createTime".toString()'>
+					<choose>
+						<when test='t.order == "desc".toString()'>
+							order by mc.CREATE_TIME DESC
+						</when>
+						<when test='t.order == "asc".toString()'>
+							order by mc.CREATE_TIME ASC
+						</when>
+					</choose>
+				</when>
+				<when test='t.sort == "cardId".toString()'>
+					<choose>
+						<when test='t.order == "desc".toString()'>
+							order by mc.CARD_ID DESC
+						</when>
+						<when test='t.order == "asc".toString()'>
+							order by mc.CARD_ID ASC
+						</when>
+					</choose>
+				</when>
+			</choose>
+		</if>
     </select>
     
     <select id="queryMemberCardInfoByType" resultMap="MemberCardMap" parameterType="java.util.HashMap">

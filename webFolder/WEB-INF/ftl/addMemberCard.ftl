@@ -22,11 +22,11 @@
             rownumbers="true" fitColumns="true" singleSelect="true">
         <thead>
             <tr>
-                <th field="cardId" width="50">卡号</th>
+                <th field="cardId" width="50" sortable="true">卡号</th>
                 <th field="cardTypeName" width="50">卡类型名称</th>
                 <th field="hodeCardName" width="50">持卡人</th>
                 <th field="hodeCardPhone" width="50">持卡联系方式</th>
-                <th field="createTime" width="50">开卡日期</th>
+                <th field="createTime" width="50" sortable="true">开卡日期</th>
                 <th field="cardBalance" width="50">余额</th>
                 <th field="cardTypeCode" width="50" hidden="true">卡类型</th>
             </tr>

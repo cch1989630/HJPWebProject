@@ -261,7 +261,7 @@ public class BalanceController {
 		String endTime = req.getParameter("endTime");
 		
 		HashMap<String, Object> con = new HashMap<String, Object>();
-		con.put("childMerchantId", staff.getChildMerchantId());
+		con.put("costMerchantId", staff.getChildMerchantId());
 		if (beginTime != null && !"".equals(beginTime)) {
 			con.put("beginTime", beginTime);
 		}
@@ -320,7 +320,8 @@ public class BalanceController {
 		
 		List<MemberBalanceExcelPoi> memberBalanceExcelPoiList = new ArrayList<MemberBalanceExcelPoi>();
 		for (int i = 0; i < memberCardList.size(); i++) {
-			memberBalanceExcelPoiList.add(new MemberBalanceExcelPoi(memberCardList.get(i).getMerchantName(),memberCardList.get(i).getStaffName(),
+			memberBalanceExcelPoiList.add(new MemberBalanceExcelPoi(memberCardList.get(i).getCardTypeName(), memberCardList.get(i).getCardId(),
+					memberCardList.get(i).getMerchantName(),memberCardList.get(i).getStaffName(),
 					memberCardList.get(i).getCostTime(), DateStringUtils.getDoubleFormLong(memberCardList.get(i).getCost(), 100, 2), 
 					DateStringUtils.getDoubleFormLong(memberCardList.get(i).getCostCardBalance(),100,2)));
 		}
@@ -342,7 +343,7 @@ public class BalanceController {
 			}
 		} 
 		
-		String[] headers = { "门店", "操作员", "消费日期", "消费金额", "卡余额"};
+		String[] headers = {"卡类型", "卡号", "门店", "操作员", "消费日期", "消费金额", "卡余额"};
 		
 		OutputStream out = res.getOutputStream();
 		ExcelPoiUtil.exportExcel("会员卡消费明细",publicMap, headers, memberBalanceExcelPoiList, out);

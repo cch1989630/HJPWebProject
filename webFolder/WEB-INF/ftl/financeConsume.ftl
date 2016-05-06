@@ -39,7 +39,7 @@
 		    			<td>消费金额</td>
 		    			<td><input class="easyui-textbox" type="text" id="cost" data-options=""></input></td>
 		    			<td>消费日期</td>
-		    			<td><input id="costTime" class="easyui-datebox" data-options="formatter:formatTime,parser:changeParser"></input></td>
+		    			<td><input id="costTime" class="easyui-datebox" ></input></td>
 		    		</tr>
 		    	</table>
 		    </form>

@@ -13,10 +13,10 @@ $(document).ready(function () {
 			}
 			if (parseInt(cost) > parseInt(cardBalance)) {
 				showMessage("错误","卡余额不足，请重新输入！","show");
-				$("#cost").numberbox("setValue", cardBalance);
+				//$("#cost").numberbox("setValue", cardBalance);
 				return;
 			}
-			$('#cardBalance').textbox('setValue',$("#cardBalance").val()-cost)
+			//$('#cardBalance').textbox('setValue',$("#cardBalance").val()-cost)
 		}
 	});
 });
@@ -64,7 +64,7 @@ function submitForm(){
 			showMessage("错误","请先查询贵宾卡信息！","show");
 			return;
 		}
-		if (parseInt(cost) > parseInt(cardBalance)) {
+		if (parseFloat(cost) > parseFloat(cardBalance)) {
 			showMessage("错误","卡余额不足，请重新输入！","show");
 			$("#cost").numberbox("setValue", cardBalance);
 			return;
@@ -74,9 +74,11 @@ function submitForm(){
 		data.cardId = $("#cardId").val();
 		data.costTime = $("#costTime").val();
 		data.cardBalance = $("#cardBalance").val();
+		var cardBalanceValue =  parseFloat(cardBalance) - parseFloat(cost);
+		
 		data = JSON.stringify(data);
 		var message = $('#cardTypeCode').combobox('getText') + "，卡号为" + $("#cardId").val() + "本次消费金额为" + 
-			$("#cost").val() + "元，本次消费后余额" + $("#cardBalance").val() + "元,请确认！"
+			$("#cost").val() + "元，本次消费后余额" + cardBalanceValue + "元,请确认！"
 		$.messager.confirm("操作提示", message, function (info) {  
             if (info) {  
                 //alert("确定");
@@ -93,11 +95,15 @@ function submitForm(){
 function finishCheckOutBalance(data) {
 	var ret = eval(data);
 	if(ret.state === 1) {
+		var cost = $("#cost").val();
+		var cardBalance = $("#cardBalance").val();
+		var cardBalanceValue =  parseFloat(cardBalance) - parseFloat(cost);
 		showMessage("成功","贵宾卡消费成功！","show",function(){
-			printCardConsume($("#cardId").val(), $('#cardTypeCode').combobox('getText'), $("#cost").val(), $("#cardBalance").val(),
-					$('#costTime').datebox('getValue'), $("#merchantName").val());
-			clearForm()
+			
 		});
+		printCardConsume($("#cardId").val(), $('#cardTypeCode').combobox('getText'), $("#cost").val(), cardBalanceValue,
+				$('#costTime').datebox('getValue'), $("#merchantName").val());
+		clearForm();
 	}
 }
 
