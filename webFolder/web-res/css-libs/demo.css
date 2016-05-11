@@ -16,3 +16,11 @@ h2 {
 .demo-tip{
 	display:none;
 }
+
+.datagrid-mask{
+	z-index:100000;
+}
+
+.datagrid-mask-msg{
+	z-index:100001;
+}
