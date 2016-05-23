@@ -26,6 +26,7 @@ import com.hjp.programme.poi.vo.MainMemberBalanceExcelPoi;
 import com.hjp.programme.poi.vo.MemberBalanceExcelPoi;
 import com.hjp.programme.service.IBalanceService;
 import com.hjp.programme.service.IMemberCardService;
+import com.hjp.programme.service.IMerchantService;
 import com.hjp.programme.service.IStaffService;
 import com.hjp.programme.util.DateStringUtils;
 import com.hjp.programme.util.ExcelPoiUtil;
@@ -33,6 +34,7 @@ import com.hjp.programme.util.Page;
 import com.hjp.programme.vo.Balance;
 import com.hjp.programme.vo.CardType;
 import com.hjp.programme.vo.MemberCard;
+import com.hjp.programme.vo.MerchantPrinter;
 import com.hjp.programme.vo.Staff;
 
 @Controller(value="BalanceController")
@@ -47,6 +49,9 @@ public class BalanceController {
 	@Resource(name = "balanceService")
 	private IBalanceService balanceService;
 	
+	@Resource(name = "merchantService")
+	private IMerchantService merchantService;
+	
 	@RequestMapping(value = "/childMerchantConsume.do", method = {RequestMethod.POST, RequestMethod.GET})
 	public String childMerchantConsume(HttpServletRequest req, HttpServletResponse res, ModelMap model) throws Exception {
 		return "childMerchantConsume";
@@ -54,6 +59,18 @@ public class BalanceController {
 	
 	@RequestMapping(value = "/memberCardConsume.do", method = {RequestMethod.POST, RequestMethod.GET})
 	public String memberCardConsume(HttpServletRequest req, HttpServletResponse res, ModelMap model) throws Exception {
+		UserDetails userDetails = (UserDetails) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+		String userName = userDetails.getUsername();
+		Staff staff = staffService.queryStaffByStaffId(userName);
+		HashMap<String, Object> cond = new HashMap<String, Object>();
+		cond.put("merchantId", staff.getChildMerchantId());
+		List<MerchantPrinter> merchantPrinterList = merchantService.queryMerchantPrinter(cond);
+		
+		if (merchantPrinterList.size() > 0) {
+			model.put("printerName", merchantPrinterList.get(0).getPrinterName());
+		} else {
+			model.put("printerName", "");
+		}
 		return "memberCardConsume";
 	}
 	

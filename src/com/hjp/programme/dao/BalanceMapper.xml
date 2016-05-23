@@ -196,6 +196,12 @@
 			AND b.COST_TIME > DATE_FORMAT(#{beginTime,jdbcType=VARCHAR},'%Y-%m-%d %H:%i:%s')
 			]]>
 		</if>
+		<if test="endTime != null" >
+			<![CDATA[
+			AND b.COST_TIME < DATE_FORMAT(#{endTime,jdbcType=VARCHAR},'%Y-%m-%d %H:%i:%s')
+			]]>
+		</if>
+		ORDER BY COST_TIME DESC
     </select>
     
 </mapper>

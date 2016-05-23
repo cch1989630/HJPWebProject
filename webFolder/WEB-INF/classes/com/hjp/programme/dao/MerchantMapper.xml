@@ -7,6 +7,11 @@
     	<result column="STATE" property="state" jdbcType="VARCHAR"/>
     </resultMap>
     
+    <resultMap id="MerchantPrinterMap" type="com.hjp.programme.vo.MerchantPrinter" >
+    	<result column="MERCHANT_ID" property="merchantId" jdbcType="VARCHAR"/>
+    	<result column="PRINTER_NAME" property="printerName" jdbcType="VARCHAR"/>
+    </resultMap>
+    
     <insert id="insertMerchantInfo" parameterType="com.hjp.programme.vo.MerchantInfo">
     	insert into td_m_merchant_info
     	<trim prefix="(" suffix=")" suffixOverrides="," >
@@ -53,11 +58,41 @@
 	    </trim>
     </insert>
     
+    <insert id="insertMerchantrPrinter" parameterType="com.hjp.programme.vo.MerchantRegister">
+    	insert into tf_f_merchant_printer
+    	<trim prefix="(" suffix=")" suffixOverrides="," >
+		    <if test="merchantId != null" >
+		        MERCHANT_ID,
+		    </if>
+		    <if test="printerName != null" >
+		        PRINTER_NAME,
+		    </if>
+		</trim>
+	    <trim prefix="values (" suffix=")" suffixOverrides="," >
+	      	<if test="merchantId != null" >
+	        	#{merchantId,jdbcType=VARCHAR},
+	      	</if>
+	      	<if test="printerName != null" >
+	        	#{printerName,jdbcType=VARCHAR},
+	      	</if>
+	    </trim>
+    </insert>
+    
     <update id="updateMerchantInfo" parameterType="java.util.HashMap">
   		update td_m_merchant_info
   		<set>
   	  		<if test="merchantName != null" >
         		MERCHANT_NAME = #{merchantName,jdbcType=VARCHAR},
+      		</if>
+      	</set>
+      	where MERCHANT_ID = #{merchantId,jdbcType=VARCHAR}
+    </update>
+    
+    <update id="updateMerchantPrinter" parameterType="java.util.HashMap">
+  		update tf_f_merchant_printer
+  		<set>
+  	  		<if test="printerName != null" >
+        		PRINTER_NAME = #{printerName,jdbcType=VARCHAR},
       		</if>
       	</set>
       	where MERCHANT_ID = #{merchantId,jdbcType=VARCHAR}
@@ -86,5 +121,22 @@
         	and MERCHANT_NAME like '%${t.merchantName}%'
       	</if>
     </select>
+    
+    <select id="queryMerchantPrinter" resultMap="MerchantPrinterMap" parameterType="java.util.HashMap">
+    	SELECT MERCHANT_ID, PRINTER_NAME
+		FROM tf_f_merchant_printer 
+		where 1=1
+		<if test="merchantId != null" >
+        	and MERCHANT_ID = #{merchantId,jdbcType=VARCHAR}
+      	</if>
+    </select>
+    
+    <delete id="deleteMerchantPrinter" parameterType="java.util.HashMap">
+    	DELETE FROM tf_f_merchant_printer 
+    	WHERE 1=1
+		<if test="merchantId != null" >
+        	and MERCHANT_ID = #{merchantId,jdbcType=VARCHAR}
+      	</if>
+    </delete>
     
 </mapper>

@@ -83,6 +83,7 @@
 			    	<li><a target="mainFrame" copyhref="childMerchantConsume.do">门店消费查询</a></li>
 			    	<li><a target="mainFrame" copyhref="memberCardConsume.do">贵宾卡消费查询</a></li>
 			    	<li><a target="mainFrame" copyhref="changeSelfPassword.do">修改密码</a></li>
+			    	<li><a target="mainFrame" copyhref="printerManage.do">打印机设置</a></li>
 			    	<li><a href="j_spring_security_logout" iconCls="icon-cancel">退出</a></li>
 			 	</div>
 		 	<#else>

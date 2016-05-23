@@ -17,6 +17,7 @@
 	.base{width: 200px; height: 30px;}
 </style>
 <body>
+	<input id="printerName" value="${printerName}" style="display:none"/>
 	<div class="easyui-panel" style="width:80%">
 		<div style="padding:10px 60px 20px 60px">
 		    <form id="ff" method="post">

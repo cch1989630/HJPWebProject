@@ -9,10 +9,12 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.hjp.programme.mapper.BalanceMapper;
+import com.hjp.programme.mapper.CardTypeMapper;
 import com.hjp.programme.mapper.MemberCardMapper;
 import com.hjp.programme.service.IBalanceService;
 import com.hjp.programme.util.CCHException;
 import com.hjp.programme.vo.Balance;
+import com.hjp.programme.vo.CardType;
 import com.hjp.programme.vo.MemberCard;
 
 @Service(value="balanceService")
@@ -23,6 +25,9 @@ public class BalanceServiceImpl implements IBalanceService {
 	
 	@Resource(name="memberCardMapper")  
     private MemberCardMapper memberCardMapper;
+	
+	@Resource(name="cardTypeMapper")  
+    private CardTypeMapper cardTypeMapper;
 	
 	@Override
 	public void updateBalance(HashMap<String, Object> cond) {
@@ -65,13 +70,9 @@ public class BalanceServiceImpl implements IBalanceService {
 		
 		try {
 			cond.clear();
-			cond.put("cost", balance.getCost());
-			cond.put("costId", balance.getCostId());
-			cond.put("cardBalance", balance.getCardBalance());
-			cond.put("editStaffId", balance.getEditStaffId());
-			cond.put("editTime", balance.getEditTime());
 			//当输入了新的卡号时，需要进行更新那条数据的cardId
 			if (balance.getCardId().equals(newCardId)) {
+				cond.put("cardBalance", balance.getCardBalance());
 				Long changeBalance = balance.getCardBalance() - updateBalanceList.get(0).getCardBalance();
 				updateBalanceStream(changeBalance, updateBalanceList.get(0));
 			} else {
@@ -82,7 +83,25 @@ public class BalanceServiceImpl implements IBalanceService {
 				updateBalance.setCardId(newCardId);
 				updateBalance.setCostTime(updateBalanceList.get(0).getCostTime());
 				updateBalanceStream(0-updateBalanceList.get(0).getCost(), updateBalance);
+				
+				//当修改了会员卡号后，需要将当前记录更改成对应卡号记录
+				//需要重新计算该卡在该条消费时的余额
+				cond.put("endTime", updateBalance.getCostTime());
+				List<Balance> beforeCostBalanceList = balanceMapper.queryBalanceInfo(cond);
+				if (beforeCostBalanceList.size() > 0) {
+					//当存在消费记录时，需要根据前一条记录计算余额
+					cond.put("cardBalance", beforeCostBalanceList.get(0).getCardBalance() - balance.getCost());
+				} else {
+					//当不存在消费记录时，直接使用实际余额进行计算
+					cond.put("cardTypeCode", existMemberCardList.get(0).getCardTypeCode());
+					List<CardType> cardTypeList = cardTypeMapper.queryCardTypeByCond(cond);
+					cond.put("cardBalance", cardTypeList.get(0).getCardTypeBalance() - balance.getCost());
+				}
 			}
+			cond.put("cost", balance.getCost());
+			cond.put("costId", balance.getCostId());
+			cond.put("editStaffId", balance.getEditStaffId());
+			cond.put("editTime", balance.getEditTime());
 			balanceMapper.updateBalance(cond);
 			
 		} catch (Exception e) {

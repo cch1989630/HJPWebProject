@@ -14,6 +14,7 @@ import com.hjp.programme.service.IMerchantService;
 import com.hjp.programme.util.CCHException;
 import com.hjp.programme.util.Page;
 import com.hjp.programme.vo.MerchantInfo;
+import com.hjp.programme.vo.MerchantPrinter;
 import com.hjp.programme.vo.MerchantRegister;
 
 @Service(value="merchantService")
@@ -69,6 +70,37 @@ public class MerchantServiceImpl implements IMerchantService {
 			throw new CCHException("0", "您输入的部门名称已存在，请重新输入");
 		}
 		merchantMapper.updateMerchantInfo(cond);
+	}
+
+	@Override
+	public void insertMerchantrPrinter(MerchantPrinter merchantPrinter)
+			throws CCHException {
+		try {
+			HashMap<String, Object> cond = new HashMap<String, Object>();
+			cond.put("merchantId", merchantPrinter.getMerchantId());
+			merchantMapper.deleteMerchantPrinter(cond);
+			
+			merchantMapper.insertMerchantrPrinter(merchantPrinter);
+		} catch (Exception e) {
+			e.printStackTrace();
+			throw new CCHException("0", "修改打印机失败");
+		}
+	}
+
+	@Override
+	public void updateMerchantPrinter(HashMap<String, Object> cond)
+			throws CCHException {
+		try {
+			merchantMapper.updateMerchantPrinter(cond);
+		} catch (Exception e) {
+			throw new CCHException("0", "修改打印机失败");
+		}
+	}
+
+	@Override
+	public List<MerchantPrinter> queryMerchantPrinter(
+			HashMap<String, Object> cond) {
+		return merchantMapper.queryMerchantPrinter(cond);
 	}
 
 }

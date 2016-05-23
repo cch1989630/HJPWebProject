@@ -20,6 +20,7 @@ import com.hjp.programme.service.IMerchantService;
 import com.hjp.programme.service.IStaffService;
 import com.hjp.programme.util.Page;
 import com.hjp.programme.vo.MerchantInfo;
+import com.hjp.programme.vo.MerchantPrinter;
 import com.hjp.programme.vo.MerchantRegister;
 import com.hjp.programme.vo.Staff;
 
@@ -37,6 +38,24 @@ public class MerchantManageController {
 		return "addMerchantInfo";
 	}
 	
+	@RequestMapping(value = "/printerManage.do", method = {RequestMethod.POST, RequestMethod.GET})
+	public String printerManage(HttpServletRequest req, HttpServletResponse res, ModelMap model) throws Exception {
+		UserDetails userDetails = (UserDetails) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+		String userName = userDetails.getUsername();
+		Staff staff = staffService.queryStaffByStaffId(userName);
+		HashMap<String, Object> cond = new HashMap<String, Object>();
+		cond.put("merchantId", staff.getChildMerchantId());
+		List<MerchantPrinter> merchantPrinterList = merchantService.queryMerchantPrinter(cond);
+		
+		if (merchantPrinterList.size() > 0) {
+			model.put("printerName", merchantPrinterList.get(0).getPrinterName());
+		} else {
+			model.put("printerName", "");
+		}
+		
+		return "printerManage";
+	}
+	
 	/**
 	 * 查询店铺信息列表
 	 * @param req
@@ -46,9 +65,6 @@ public class MerchantManageController {
 	 */
 	@RequestMapping(value = "/queryMerchantList.do", method = {RequestMethod.POST, RequestMethod.GET})
 	public void queryMerchantList(HttpServletRequest req, HttpServletResponse res, ModelMap model) throws Exception {
-		UserDetails userDetails = (UserDetails) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
-		String userName = userDetails.getUsername();
-		Staff staff = staffService.queryStaffByStaffId(userName);
 		
 		JSONArray merchantArray = new JSONArray();
 		HashMap<String, Object> cond = new HashMap<String, Object>();
@@ -138,6 +154,40 @@ public class MerchantManageController {
 		cond.put("merchantId", json.get("selectMerchantId"));
 		cond.put("merchantName", json.get("selectMerchantName"));
 		merchantService.updateMerchantInfo(cond);
+		
+		return returnJson;
+	}
+	
+	/**
+	 * 保存打印机信息
+	 * @param json
+	 * @return
+	 * @throws Exception
+	 */
+	public JSONObject saveMerchantPrinter(JSONObject json) throws Exception {
+		JSONObject returnJson = new JSONObject();
+		
+		MerchantPrinter merchantPrinter = new MerchantPrinter();
+		merchantPrinter.setMerchantId(json.getString("childMerchantId"));
+		merchantPrinter.setPrinterName(json.getString("printerName"));
+		merchantService.insertMerchantrPrinter(merchantPrinter);
+		
+		return returnJson;
+	}
+	
+	/**
+	 * 更新打印机信息
+	 * @param json
+	 * @return
+	 * @throws Exception
+	 */
+	public JSONObject updateMerchantPrinter(JSONObject json) throws Exception {
+		JSONObject returnJson = new JSONObject();
+		
+		HashMap<String, Object> cond = new HashMap<String, Object>();
+		cond.put("merchantId", json.get("childMerchantId"));
+		cond.put("printerName", json.get("printerName"));
+		merchantService.updateMerchantPrinter(cond);
 		
 		return returnJson;
 	}

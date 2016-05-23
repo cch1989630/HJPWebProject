@@ -14,6 +14,7 @@
     <script type="text/javascript" src="web-res/js-default/memberCardConsume.js"></script>
 </head>
 <body>
+	<input id="printerName" value="${printerName}" style="display:none"/>
 	<div class="easyui-panel" style="width:100%;height:30%" title="搜索">
 		<div style="padding:10px 60px 20px 60px">
 		    <form id="ff" method="post">

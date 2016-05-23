@@ -23,6 +23,7 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import com.hjp.programme.poi.vo.MemberTypeBalanceExcelPoi;
 import com.hjp.programme.service.ICardTypeService;
 import com.hjp.programme.service.IMemberCardService;
+import com.hjp.programme.service.IMerchantService;
 import com.hjp.programme.service.IStaffService;
 import com.hjp.programme.util.CCHException;
 import com.hjp.programme.util.DateStringUtils;
@@ -31,6 +32,7 @@ import com.hjp.programme.util.Page;
 import com.hjp.programme.vo.Balance;
 import com.hjp.programme.vo.CardType;
 import com.hjp.programme.vo.MemberCard;
+import com.hjp.programme.vo.MerchantPrinter;
 import com.hjp.programme.vo.Staff;
 
 
@@ -45,6 +47,9 @@ public class CardManageController {
 	
 	@Resource(name = "memberCardService")
 	private IMemberCardService memberCardService;
+	
+	@Resource(name = "merchantService")
+	private IMerchantService merchantService;
 	
 	@RequestMapping(value = "/cardType.do", method = {RequestMethod.POST, RequestMethod.GET})
 	public String cardType(HttpServletRequest req, HttpServletResponse res, ModelMap model) throws Exception {
@@ -64,6 +69,17 @@ public class CardManageController {
 		model.put("merchantId", staff.getChildMerchantId());
 		model.put("merchantName", staff.getMerchantName());
 		model.put("staffId", staff.getStaffId());
+		
+		HashMap<String, Object> cond = new HashMap<String, Object>();
+		cond.put("merchantId", staff.getChildMerchantId());
+		List<MerchantPrinter> merchantPrinterList = merchantService.queryMerchantPrinter(cond);
+		
+		if (merchantPrinterList.size() > 0) {
+			model.put("printerName", merchantPrinterList.get(0).getPrinterName());
+		} else {
+			model.put("printerName", "");
+		}
+		
 		return "cardConsume";
 	}
 	

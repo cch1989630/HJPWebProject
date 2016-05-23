@@ -51,6 +51,9 @@ function printCardConsume(cardId, cardTypeName, cost, cardBalance, costTime, mer
 	LODOP.PRINT_INIT("贵宾卡消费"); 
 	LODOP.SET_PRINT_MODE("CREATE_CUSTOM_PAGE_NAME", "tag");
 	LODOP.SET_PRINT_STYLE("FontSize",9)
+	if ($("#printerName").val() !="") {
+		LODOP.SET_PRINTER_INDEXA($("#printerName").val());
+	}
 	//LODOP.SET_PRINT_PAGESIZE(1,54,80,"CREATE_CUSTOM_PAGE_NAME");
 	LODOP.ADD_PRINT_TEXT("6mm", "0.5mm", "54mm", "6mm", "卡号：" + cardId);
 	LODOP.ADD_PRINT_TEXT("12mm", "0.5mm", "54mm", "6mm", "卡类型：" + cardTypeName);

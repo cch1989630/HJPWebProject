@@ -1,4 +1,9 @@
 $(document).ready(function () {
+	
+	if ($("#printerName").val() ==="") {
+		showMessage("提示","该门店没有设置打印机，将从本电脑的默认打印机进行打印。如需更改请设置后重新打开该页面！","show");
+	}
+	
 	$("#cardId").textbox({onClickButton:function(){
 		queryCardInfo();
     }});
@@ -73,9 +78,9 @@ function submitForm(){
 		data.cost = $("#cost").val();
 		data.cardId = $("#cardId").val();
 		data.costTime = $("#costTime").val();
-		data.cardBalance = $("#cardBalance").val();
+		//data.cardBalance = $("#cardBalance").val();
 		var cardBalanceValue =  parseFloat(cardBalance) - parseFloat(cost);
-		
+		data.cardBalance = cardBalanceValue;
 		data = JSON.stringify(data);
 		var message = $('#cardTypeCode').combobox('getText') + "，卡号为" + $("#cardId").val() + "本次消费金额为" + 
 			$("#cost").val() + "元，本次消费后余额" + cardBalanceValue + "元,请确认！"
@@ -98,7 +103,7 @@ function finishCheckOutBalance(data) {
 		var cost = $("#cost").val();
 		var cardBalance = $("#cardBalance").val();
 		var cardBalanceValue =  parseFloat(cardBalance) - parseFloat(cost);
-		showMessage("成功","贵宾卡消费成功！","show",function(){
+		showMessage("成功","打印贵宾卡消费信息！","show",function(){
 			
 		});
 		printCardConsume($("#cardId").val(), $('#cardTypeCode').combobox('getText'), $("#cost").val(), cardBalanceValue,
@@ -116,6 +121,9 @@ function printCardConsume(cardId, cardTypeName, cost, cardBalance, costTime, mer
 	LODOP.PRINT_INIT("贵宾卡消费"); 
 	LODOP.SET_PRINT_MODE("CREATE_CUSTOM_PAGE_NAME", "tag");
 	LODOP.SET_PRINT_STYLE("FontSize",9)
+	if ($("#printerName").val() !="") {
+		LODOP.SET_PRINTER_INDEXA($("#printerName").val());
+	}
 	//LODOP.SET_PRINT_PAGESIZE(1,54,80,"CREATE_CUSTOM_PAGE_NAME");
 	LODOP.ADD_PRINT_TEXT("6mm", "0.5mm", "54mm", "6mm", "卡号：" + cardId);
 	LODOP.ADD_PRINT_TEXT("12mm", "0.5mm", "54mm", "6mm", "卡类型：" + cardTypeName);
