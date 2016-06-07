@@ -7,6 +7,8 @@ public class MainMemberBalanceExcelPoi {
 	
 	private String hodeCardName;
 	
+	private String balanceMerchantId;
+	
 	private String hodeCardPhone;
 	
 	private Date createTime;
@@ -23,13 +25,14 @@ public class MainMemberBalanceExcelPoi {
 	
 	private Double costCardBalance;
 
-	public MainMemberBalanceExcelPoi(String cardId, String hodeCardName,
+	public MainMemberBalanceExcelPoi(String cardId, String hodeCardName, String balanceMerchantId,
 			String hodeCardPhone, Date createTime, String cardTypeName,
 			String merchantName, String staffName, Date costTime, Double cost,
 			Double costCardBalance) {
 		super();
 		this.cardId = cardId;
 		this.hodeCardName = hodeCardName;
+		this.balanceMerchantId = balanceMerchantId;
 		this.hodeCardPhone = hodeCardPhone;
 		this.createTime = createTime;
 		this.cardTypeName = cardTypeName;
@@ -118,5 +121,13 @@ public class MainMemberBalanceExcelPoi {
 
 	public void setCostCardBalance(Double costCardBalance) {
 		this.costCardBalance = costCardBalance;
+	}
+
+	public String getBalanceMerchantId() {
+		return balanceMerchantId;
+	}
+
+	public void setBalanceMerchantId(String balanceMerchantId) {
+		this.balanceMerchantId = balanceMerchantId;
 	}
 }

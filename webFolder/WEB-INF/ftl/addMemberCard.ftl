@@ -16,7 +16,20 @@
 	.base{width: 200px; height: 30px;}
 </style>
 <body>
-	<table id="dg" title="贵宾卡统计" class="easyui-datagrid" style="width:80%;height:90%"
+	<input id="menuRoleCode" value="${menuRoleCode}" style="display:none"/>
+	<div class="easyui-panel" style="width:100%;height:20%" title="搜索">
+		<div style="padding:10px 60px 20px 60px">
+		    <form id="fq" method="post">
+		    	<table cellpadding="5">
+		    		<tr>
+                    	<td>卡号</td>
+		    			<td><input class="easyui-textbox" type="text" id="queryCardId" data-options=""></input></td>
+		    			<td><a href="#" onclick="queryMemberCard()" class="easyui-linkbutton" data-options="iconCls:'icon-search'" style="width:80px">搜索</a></td>
+		    	</table>
+		    </form>
+		</div>
+	</div>
+	<table id="dg" title="贵宾卡统计" class="easyui-datagrid" style="width:100%;height:60%"
             url="queryCardByType.do"
             toolbar="#toolbar" pagination="true" pageList = "[15,30,45]" pageSize = "15"
             rownumbers="true" fitColumns="true" singleSelect="true">

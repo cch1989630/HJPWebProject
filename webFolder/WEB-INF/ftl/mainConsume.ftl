@@ -77,6 +77,7 @@
             <tr>
                 <th field="cardId" width="50">卡号</th>
                 <th field="hodeCardName" width="50">持卡人</th>
+                <th field="balanceMerchantId" width="50">消费部门</th>
                 <th field="hodeCardPhone" width="50">持卡人联系方式</th>
                 <th field="createTime" width="50">开卡日期</th>
                 <th field="cardTypeName" width="50">卡类型</th>

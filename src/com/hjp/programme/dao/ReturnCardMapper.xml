@@ -1,0 +1,57 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.hjp.programme.mapper.ReturnCardMapper" >
+	<resultMap id="ReturnCardMap" type="com.hjp.programme.vo.ReturnCard" >
+    	<result column="CARD_ID" property="cardId" jdbcType="VARCHAR"/>
+    	<result column="MERCHANT_ID" property="merchantId" jdbcType="VARCHAR"/>
+    	<result column="RETURN_STAFF_ID" property="returnStaffId" jdbcType="VARCHAR"/>
+    	<result column="RETURN_DATE" property="returnDate" jdbcType="TIMESTAMP"/>
+    </resultMap>
+    
+    <select id="queryReturnCard" resultMap="ReturnCardMap" parameterType="java.util.HashMap">
+    	select CARD_ID, MERCHANT_ID, RETURN_STAFF_ID, RETURN_DATE
+    	from tf_f_return_card
+    	where 1=1
+    	<if test="cardId != null" >
+        	AND CARD_ID = #{cardId,jdbcType=VARCHAR}
+      	</if>
+    </select>
+    
+    <insert id="insertReturnCard" parameterType="com.hjp.programme.vo.CardType">
+    	insert into tf_f_return_card
+    	<trim prefix="(" suffix=")" suffixOverrides="," >
+		    <if test="cardId != null" >
+		        CARD_ID,
+		    </if>
+		    <if test="merchantId != null" >
+		        MERCHANT_ID,
+		    </if>
+		    <if test="returnStaffId != null" >
+		        RETURN_STAFF_ID,
+		    </if>
+		    <if test="returnDate != null" >
+		        RETURN_DATE,
+		    </if>
+		</trim>
+	    <trim prefix="values (" suffix=")" suffixOverrides="," >
+	      	<if test="cardId != null" >
+	        	#{cardId,jdbcType=VARCHAR},
+	      	</if>
+	      	<if test="merchantId != null" >
+	        	#{merchantId,jdbcType=VARCHAR},
+	      	</if>
+	      	<if test="returnStaffId != null" >
+	        	#{returnStaffId,jdbcType=VARCHAR},
+	      	</if>
+	      	<if test="returnDate != null" >
+	        	#{returnDate,jdbcType=TIMESTAMP},
+	      	</if>
+	     </trim>
+    </insert>
+    
+    <delete id="deleteReturnCard" parameterType="java.util.HashMap">
+    	delete from tf_f_return_card where CARD_ID = #{cardId,jdbcType=VARCHAR}
+    		and MERCHANT_ID = #{merchantId,jdbcType=VARCHAR}
+    </delete>
+    
+</mapper>

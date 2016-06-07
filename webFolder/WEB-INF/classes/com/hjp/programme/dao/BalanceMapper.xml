@@ -139,7 +139,7 @@
 		</if>
 		<if test="openEndTime != null" >
 			<![CDATA[
-			AND mc.CREATE_TIME >= DATE_FORMAT(#{openEndTime,jdbcType=VARCHAR},'%Y-%m-%d %H:%i:%s')
+			AND mc.CREATE_TIME <= DATE_FORMAT(#{openEndTime,jdbcType=VARCHAR},'%Y-%m-%d %H:%i:%s')
 			]]>
 		</if>
 		<if test="beginTime != null" >

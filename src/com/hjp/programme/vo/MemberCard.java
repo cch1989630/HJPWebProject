@@ -43,6 +43,12 @@ public class MemberCard {
 	
 	private String isMonth;
 	
+	private String balanceMerchantId;
+	
+	private String returnStaffId;
+	
+	private Date returnDate;
+	
 	public String getCardId() {
 		return cardId;
 	}
@@ -201,6 +207,30 @@ public class MemberCard {
 
 	public void setIsMonth(String isMonth) {
 		this.isMonth = isMonth;
+	}
+
+	public String getBalanceMerchantId() {
+		return balanceMerchantId;
+	}
+
+	public void setBalanceMerchantId(String balanceMerchantId) {
+		this.balanceMerchantId = balanceMerchantId;
+	}
+
+	public String getReturnStaffId() {
+		return returnStaffId;
+	}
+
+	public void setReturnStaffId(String returnStaffId) {
+		this.returnStaffId = returnStaffId;
+	}
+
+	public Date getReturnDate() {
+		return returnDate;
+	}
+
+	public void setReturnDate(Date returnDate) {
+		this.returnDate = returnDate;
 	}
 	
 }

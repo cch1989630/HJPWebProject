@@ -1,4 +1,15 @@
 var dataType;
+
+function queryMemberCard() {
+	if($("#fq").form('validate')) {
+		var cardId = $('#cardId').val();
+		var queryParams = $('#dg').datagrid('options').queryParams;  
+		queryParams.cardId = cardId;
+		$('#dg').datagrid('options').queryParams = queryParams;  
+        $("#dg").datagrid('reload');
+	}
+}
+
 function newMemberCard() {
 	$('#dlg').dialog('open').dialog('center').dialog('setTitle', '新增贵宾卡');
 	$('#ff').form('clear');
@@ -89,6 +100,12 @@ function clearForm(){
 }
 
 $(document).ready(function () {
+	if ($("#menuRoleCode").val() === 'ROLE_MANAGER') {
+		$("#cardBalance").numberbox({
+			disabled : false,
+		});
+	}
+	
 	$('#cardTypeCode').combobox({
 		onChange: function(newValue,oldValue){
 			var dataArray = $('#cardTypeCode').combobox('getData');
@@ -99,7 +116,9 @@ $(document).ready(function () {
 				}
 			}
 			//$('#cardTypeCode').combobox('setValue', cardTypeBalance);
-			$("#cardBalance").numberbox("setValue", cardTypeBalance);
+			if (dataType === 'save') {
+				$("#cardBalance").numberbox("setValue", cardTypeBalance);
+			}
 			//console.info(newValue);
 		}
 	});

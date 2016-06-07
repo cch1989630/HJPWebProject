@@ -22,6 +22,9 @@
     	<result column="EDIT_STAFF_NAME" property="editStaffName" jdbcType="VARCHAR"/>
     	<result column="EDIT_TIME" property="editTime" jdbcType="TIMESTAMP"/>
     	<result column="IS_MONTH" property="isMonth" jdbcType="VARCHAR"/>
+    	<result column="BALANCE_MERCHANT_ID" property="balanceMerchantId" jdbcType="VARCHAR"/>
+    	<result column="RETURN_STAFF_ID" property="returnStaffId" jdbcType="VARCHAR"/>
+    	<result column="RETURN_DATE" property="returnDate" jdbcType="TIMESTAMP"/>
     </resultMap>
     
     <insert id="insertMemberCard" parameterType="com.hjp.programme.vo.MemberCard">
@@ -83,7 +86,7 @@
     <select id="queryMemberCardBalanceByPage" resultMap="MemberCardMap" parameterType="page">
     	SELECT mc.CARD_ID, mc.HODE_CARD_NAME, mc.CARD_TYPE_CODE, mc.CARD_BALANCE, bb.COST, bb.COST_TIME, ct.CARD_TYPE_NAME,
     	mc.CREATE_TIME, mi.MERCHANT_NAME, ms.STAFF_NAME, bb.TRADE_STAFF_ID, mc.HODE_CARD_PHONE,bb.CARD_BALANCE COST_CARD_BALANCE,
-    	bb.COST_ID, bb.EDIT_STAFF_ID, tms.STAFF_NAME EDIT_STAFF_NAME, bb.EDIT_TIME, bb.IS_MONTH
+    	bb.COST_ID, bb.EDIT_STAFF_ID, tms.STAFF_NAME EDIT_STAFF_NAME, bb.EDIT_TIME, bb.IS_MONTH, bb.CHILD_MERCHANT_ID BALANCE_MERCHANT_ID
 		FROM tf_f_member_card mc, tf_b_balance bb LEFT JOIN tf_m_staff tms ON bb.EDIT_STAFF_ID = tms.STAFF_ID, td_m_card_type ct, td_m_merchant_info mi, tf_m_staff ms
 		WHERE mc.CARD_ID = bb.CARD_ID
 		AND mc.CARD_TYPE_CODE = ct.CARD_TYPE_CODE
@@ -109,7 +112,7 @@
 		</if>
 		<if test="t.openEndTime != null" >
 			<![CDATA[
-			AND mc.CREATE_TIME >= DATE_FORMAT(#{t.openEndTime,jdbcType=VARCHAR},'%Y-%m-%d %H:%i:%s')
+			AND mc.CREATE_TIME <= DATE_FORMAT(#{t.openEndTime,jdbcType=VARCHAR},'%Y-%m-%d %H:%i:%s')
 			]]>
 		</if>
 		<if test="t.beginTime != null" >
@@ -153,7 +156,7 @@
     <select id="queryMemberCardBalance" resultMap="MemberCardMap" parameterType="java.util.HashMap">
     	SELECT mc.CARD_ID, mc.HODE_CARD_NAME, mc.CARD_TYPE_CODE, mc.CARD_BALANCE, bb.COST, bb.COST_TIME, ct.CARD_TYPE_NAME,
     	mc.CREATE_TIME, mi.MERCHANT_NAME, ms.STAFF_NAME, bb.TRADE_STAFF_ID, mc.HODE_CARD_PHONE,bb.CARD_BALANCE COST_CARD_BALANCE,
-    	bb.COST_ID, bb.EDIT_STAFF_ID, tms.STAFF_NAME EDIT_STAFF_NAME, bb.EDIT_TIME, bb.IS_MONTH
+    	bb.COST_ID, bb.EDIT_STAFF_ID, tms.STAFF_NAME EDIT_STAFF_NAME, bb.EDIT_TIME, bb.IS_MONTH, bb.CHILD_MERCHANT_ID BALANCE_MERCHANT_ID
 		FROM tf_f_member_card mc, tf_b_balance bb LEFT JOIN tf_m_staff tms ON bb.EDIT_STAFF_ID = tms.STAFF_ID, td_m_card_type ct, td_m_merchant_info mi, tf_m_staff ms
 		WHERE mc.CARD_ID = bb.CARD_ID
 		AND mc.CARD_TYPE_CODE = ct.CARD_TYPE_CODE
@@ -179,7 +182,7 @@
 		</if>
 		<if test="openEndTime != null" >
 			<![CDATA[
-			AND mc.CREATE_TIME >= DATE_FORMAT(#{openEndTime,jdbcType=VARCHAR},'%Y-%m-%d %H:%i:%s')
+			AND mc.CREATE_TIME <= DATE_FORMAT(#{openEndTime,jdbcType=VARCHAR},'%Y-%m-%d %H:%i:%s')
 			]]>
 		</if>
 		<if test="beginTime != null" >
@@ -231,8 +234,21 @@
 			ct.CARD_TYPE_NAME
 		FROM tf_f_member_card mc, td_m_card_type ct
 		WHERE mc.CARD_TYPE_CODE = ct.CARD_TYPE_CODE
+		<if test="t.cardId != null" >
+			AND mc.CARD_ID = #{cardId,jdbcType=VARCHAR}
+		</if>
 		<if test="t.cardTypeCode != null" >
 			AND mc.CARD_TYPE_CODE = #{t.cardTypeCode,jdbcType=VARCHAR}
+		</if>
+		<if test="t.openBeginTime != null" >
+			<![CDATA[
+			AND mc.CREATE_TIME >= DATE_FORMAT(#{t.openBeginTime,jdbcType=VARCHAR},'%Y-%m-%d %H:%i:%s')
+			]]>
+		</if>
+		<if test="t.openEndTime != null" >
+			<![CDATA[
+			AND mc.CREATE_TIME <= DATE_FORMAT(#{t.openEndTime,jdbcType=VARCHAR},'%Y-%m-%d %H:%i:%s')
+			]]>
 		</if>
 		<if test="t.sort != null" >
 			<choose>
@@ -267,6 +283,68 @@
 		WHERE mc.CARD_TYPE_CODE = ct.CARD_TYPE_CODE
 		<if test="cardTypeCode != null" >
 			AND mc.CARD_TYPE_CODE = #{cardTypeCode,jdbcType=VARCHAR}
+		</if>
+		<if test="openBeginTime != null" >
+			<![CDATA[
+			AND mc.CREATE_TIME >= DATE_FORMAT(#{openBeginTime,jdbcType=VARCHAR},'%Y-%m-%d %H:%i:%s')
+			]]>
+		</if>
+		<if test="openEndTime != null" >
+			<![CDATA[
+			AND mc.CREATE_TIME <= DATE_FORMAT(#{openEndTime,jdbcType=VARCHAR},'%Y-%m-%d %H:%i:%s')
+			]]>
+		</if>
+    </select>
+    
+    <select id="queryReturnCardByPage" resultMap="MemberCardMap" parameterType="page">
+    	SELECT mc.CARD_ID, mc.CARD_TYPE_CODE, mc.HODE_CARD_NAME, mc.CREATE_TIME, rc.RETURN_DATE, rc.RETURN_STAFF_ID,
+			ct.CARD_TYPE_NAME, mc.CARD_BALANCE, ms.STAFF_NAME, mc.HODE_CARD_PHONE
+		FROM tf_f_member_card mc, tf_f_return_card rc, td_m_card_type ct, tf_m_staff ms
+		WHERE mc.MERCHANT_ID = rc.MERCHANT_ID
+		AND mc.CARD_ID = rc.CARD_ID
+		AND mc.CARD_TYPE_CODE = ct.CARD_TYPE_CODE
+		AND rc.RETURN_STAFF_ID = ms.STAFF_ID
+		<if test="t.cardId != null" >
+			AND mc.CARD_ID = #{t.cardId,jdbcType=VARCHAR}
+		</if>
+		<if test="t.cardTypeCode != null" >
+			AND mc.CARD_TYPE_CODE = #{t.cardTypeCode,jdbcType=VARCHAR}
+		</if>
+		<if test="t.returnBeginTime != null" >
+			<![CDATA[
+			AND rc.RETURN_DATE >= DATE_FORMAT(#{t.returnBeginTime,jdbcType=VARCHAR},'%Y-%m-%d %H:%i:%s')
+			]]>
+		</if>
+		<if test="t.returnEndTime != null" >
+			<![CDATA[
+			AND rc.RETURN_DATE <= DATE_FORMAT(#{t.returnEndTime,jdbcType=VARCHAR},'%Y-%m-%d %H:%i:%s')
+			]]>
+		</if>
+    </select>
+    
+    <select id="queryReturnCard" resultMap="MemberCardMap" parameterType="java.util.HashMap">
+    	SELECT mc.CARD_ID, mc.CARD_TYPE_CODE, mc.HODE_CARD_NAME, mc.CREATE_TIME, rc.RETURN_DATE, rc.RETURN_STAFF_ID,
+			ct.CARD_TYPE_NAME, mc.CARD_BALANCE, ms.STAFF_NAME, mc.HODE_CARD_PHONE
+		FROM tf_f_member_card mc, tf_f_return_card rc, td_m_card_type ct, tf_m_staff ms
+		WHERE mc.MERCHANT_ID = rc.MERCHANT_ID
+		AND mc.CARD_ID = rc.CARD_ID
+		AND mc.CARD_TYPE_CODE = ct.CARD_TYPE_CODE
+		AND rc.RETURN_STAFF_ID = ms.STAFF_ID
+		<if test="cardId != null" >
+			AND mc.CARD_ID = #{cardId,jdbcType=VARCHAR}
+		</if>
+		<if test="cardTypeCode != null" >
+			AND mc.CARD_TYPE_CODE = #{cardTypeCode,jdbcType=VARCHAR}
+		</if>
+		<if test="returnBeginTime != null" >
+			<![CDATA[
+			AND rc.RETURN_DATE >= DATE_FORMAT(#{returnBeginTime,jdbcType=VARCHAR},'%Y-%m-%d %H:%i:%s')
+			]]>
+		</if>
+		<if test="returnEndTime != null" >
+			<![CDATA[
+			AND rc.RETURN_DATE <= DATE_FORMAT(#{returnEndTime,jdbcType=VARCHAR},'%Y-%m-%d %H:%i:%s')
+			]]>
 		</if>
     </select>
     

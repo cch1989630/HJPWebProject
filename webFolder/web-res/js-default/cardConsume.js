@@ -4,6 +4,7 @@ $(document).ready(function () {
 		showMessage("提示","该门店没有设置打印机，将从本电脑的默认打印机进行打印。如需更改请设置后重新打开该页面！","show");
 	}
 	
+	
 	$("#cardId").textbox({onClickButton:function(){
 		queryCardInfo();
     }});
@@ -16,7 +17,7 @@ $(document).ready(function () {
 				showMessage("错误","请先查询贵宾卡信息！","show");
 				return;
 			}
-			if (parseInt(cost) > parseInt(cardBalance)) {
+			if (parseFloat(cost) > parseFloat(cardBalance)) {
 				showMessage("错误","卡余额不足，请重新输入！","show");
 				//$("#cost").numberbox("setValue", cardBalance);
 				return;
@@ -92,8 +93,6 @@ function submitForm(){
                 //alert("取消");  
             }  
         });
-		
-		
 	}
 }
 
@@ -103,7 +102,7 @@ function finishCheckOutBalance(data) {
 		var cost = $("#cost").val();
 		var cardBalance = $("#cardBalance").val();
 		var cardBalanceValue =  parseFloat(cardBalance) - parseFloat(cost);
-		showMessage("成功","打印贵宾卡消费信息！","show",function(){
+		showMessage("成功","贵宾卡消费成功！","show",function(){
 			
 		});
 		printCardConsume($("#cardId").val(), $('#cardTypeCode').combobox('getText'), $("#cost").val(), cardBalanceValue,

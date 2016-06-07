@@ -86,7 +86,7 @@
 			    	<li><a target="mainFrame" copyhref="printerManage.do">打印机设置</a></li>
 			    	<li><a href="j_spring_security_logout" iconCls="icon-cancel">退出</a></li>
 			 	</div>
-		 	<#else>
+		 	<#elseif menuRoleCode == "ROLE_MAIN">
 		 		<div title="门店贵宾卡管理" iconcls="icon-save" style="overflow: auto; padding: 10px;">
 		 			<!--
 			    	<li><a target="mainFrame" copyhref="cardConsume.do">贵宾卡消费</a></li>
@@ -101,7 +101,32 @@
 			    	<li><a target="mainFrame" copyhref="cardType.do">卡类型新增</a></li>
 			    	<li><a target="mainFrame" copyhref="addSaff.do">新增用户</a></li>
 			    	<li><a target="mainFrame" copyhref="mainConsume.do">总部贵宾卡消费查询</a></li>
-			    	<li><a target="mainFrame" copyhref="mainMemberCardType.do">贵宾卡分类查询</a></li>
+			    	<li><a target="mainFrame" copyhref="mainMemberCardType.do">贵宾卡查询</a></li>
+			    	<li><a target="mainFrame" copyhref="returnMemberCard.do">退卡信息查询</a></li>
+			    	<li><a target="mainFrame" copyhref="queryStaffPassword.do">操作员密码展示</a></li>
+			    	<li><a href="j_spring_security_logout" iconCls="icon-cancel">退出</a></li>
+			 	</div>
+			 	<div title="财务贵宾卡管理" iconcls="icon-save" style="overflow: auto; padding: 10px;">
+			 		<li><a target="mainFrame" copyhref="addMerchantInfo.do">门店部门管理</a></li>
+			    	<li><a target="mainFrame" copyhref="financeConsume.do">贵宾卡数据修改</a></li>
+			    	<li><a target="mainFrame" copyhref="financeMonth.do">月结</a></li>
+			    	<li><a href="j_spring_security_logout" iconCls="icon-cancel">退出</a></li>
+			 	</div>
+			<#else>
+				<div title="门店贵宾卡管理" iconcls="icon-save" style="overflow: auto; padding: 10px;">
+			    	<li><a target="mainFrame" copyhref="cardConsume.do">贵宾卡消费</a></li>
+			    	<li><a target="mainFrame" copyhref="childMerchantConsume.do">门店消费查询</a></li>
+			    	<li><a target="mainFrame" copyhref="memberCardConsume.do">贵宾卡消费查询</a></li>
+			    	<li><a target="mainFrame" copyhref="changeSelfPassword.do">修改密码</a></li>
+			    	<li><a href="j_spring_security_logout" iconCls="icon-cancel">退出</a></li>
+			 	</div>
+			 	<div title="总部贵宾卡管理" iconcls="icon-save" style="overflow: auto; padding: 10px;">
+			    	<li><a target="mainFrame" copyhref="addMemberCard.do">贵宾卡新增</a></li>
+			    	<li><a target="mainFrame" copyhref="cardType.do">卡类型新增</a></li>
+			    	<li><a target="mainFrame" copyhref="addSaff.do">新增用户</a></li>
+			    	<li><a target="mainFrame" copyhref="mainConsume.do">总部贵宾卡消费查询</a></li>
+			    	<li><a target="mainFrame" copyhref="mainMemberCardType.do">贵宾卡查询</a></li>
+			    	<li><a target="mainFrame" copyhref="returnMemberCard.do">退卡信息查询</a></li>
 			    	<li><a target="mainFrame" copyhref="queryStaffPassword.do">操作员密码展示</a></li>
 			    	<li><a href="j_spring_security_logout" iconCls="icon-cancel">退出</a></li>
 			 	</div>

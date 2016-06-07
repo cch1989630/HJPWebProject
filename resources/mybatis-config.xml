@@ -17,5 +17,6 @@
 		<mapper resource="com/hjp/programme/dao/MemberCardMapper.xml"/>
 		<mapper resource="com/hjp/programme/dao/MerchantMapper.xml"/>
 		<mapper resource="com/hjp/programme/dao/BalanceMapper.xml"/>
+		<mapper resource="com/hjp/programme/dao/ReturnCardMapper.xml"/>
 	</mappers>
 </configuration> 

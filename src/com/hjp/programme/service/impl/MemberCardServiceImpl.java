@@ -10,12 +10,14 @@ import org.springframework.transaction.annotation.Transactional;
 
 import com.hjp.programme.mapper.BalanceMapper;
 import com.hjp.programme.mapper.MemberCardMapper;
+import com.hjp.programme.mapper.ReturnCardMapper;
 import com.hjp.programme.mapper.SequenceMapper;
 import com.hjp.programme.service.IMemberCardService;
 import com.hjp.programme.util.CCHException;
 import com.hjp.programme.util.Page;
 import com.hjp.programme.vo.Balance;
 import com.hjp.programme.vo.MemberCard;
+import com.hjp.programme.vo.ReturnCard;
 
 @Service(value="memberCardService")
 public class MemberCardServiceImpl implements IMemberCardService {
@@ -28,6 +30,9 @@ public class MemberCardServiceImpl implements IMemberCardService {
 	
 	@Resource(name="balanceMapper")  
     private BalanceMapper balanceMapper;
+	
+	@Resource(name="returnCardMapper")  
+    private ReturnCardMapper returnCardMapper;
 	
 	@Transactional(rollbackFor=CCHException.class)
 	@Override
@@ -121,6 +126,39 @@ public class MemberCardServiceImpl implements IMemberCardService {
 		} catch (Exception e) {
 			throw new CCHException("0", "贵宾卡删除失败！");
 		}
+	}
+
+	@Transactional(rollbackFor=CCHException.class)
+	@Override
+	public void returnMemberCard(ReturnCard returnCard) throws CCHException {
+		HashMap<String, Object> cond = new HashMap<String, Object>();
+		cond.put("cardId", returnCard.getCardId());
+		List<ReturnCard> returnCardList = returnCardMapper.queryReturnCard(cond);
+		if (returnCardList.size() > 0) {
+			throw new CCHException("0", "该贵宾卡已退卡，无法再次退卡！");
+		}
+		
+		try {
+			cond.clear();
+			cond.put("cardBalance", 0);
+			cond.put("updateCardId", returnCard.getCardId());
+			memberCardMapper.updateMemberCard(cond);
+			
+			returnCardMapper.insertReturnCard(returnCard);
+		} catch (Exception e) {
+			e.printStackTrace();
+			throw new CCHException("0", "退卡失败！");
+		}
+	}
+
+	@Override
+	public List<MemberCard> queryReturnCardByPage(Page page) {
+		return memberCardMapper.queryReturnCardByPage(page);
+	}
+
+	@Override
+	public List<MemberCard> queryReturnCard(HashMap<String, Object> cond) {
+		return memberCardMapper.queryReturnCard(cond);
 	}
 
 }

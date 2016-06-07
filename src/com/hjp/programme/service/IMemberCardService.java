@@ -7,6 +7,7 @@ import com.hjp.programme.util.CCHException;
 import com.hjp.programme.util.Page;
 import com.hjp.programme.vo.Balance;
 import com.hjp.programme.vo.MemberCard;
+import com.hjp.programme.vo.ReturnCard;
 
 public interface IMemberCardService {
 	void insertMemberCard(MemberCard memberCard) throws CCHException;
@@ -26,4 +27,10 @@ public interface IMemberCardService {
 	void updateMemberCard(MemberCard memberCard, String newCardId) throws CCHException;
 	
 	void deleteMemberCard(MemberCard memberCard) throws CCHException;
+	
+	void returnMemberCard(ReturnCard returnCard) throws CCHException;
+	
+	List<MemberCard> queryReturnCardByPage(Page page);
+	
+	List<MemberCard> queryReturnCard(HashMap<String, Object> cond);
 }

@@ -102,19 +102,37 @@ public class StaffManageController {
 	 */
 	@RequestMapping(value = "/queryStaffMenuRole.do", method = {RequestMethod.POST, RequestMethod.GET})
 	public void queryStaffMenuRole(HttpServletRequest req, HttpServletResponse res, ModelMap model) throws Exception {
-		
-		HashMap<String, Object> cond = new HashMap<String, Object>();
-		cond.put("roleType", "MENU");
-		List<Role> roleList = staffService.queryRole(cond);
+		UserDetails userDetails = (UserDetails) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+		String userName = userDetails.getUsername();
+		Staff staff = staffService.queryStaffByStaffId(userName);
 		
 		JSONArray menuRoleArray = new JSONArray();
-		for (int i = 0; i < roleList.size(); i++) {
-			JSONObject oneObject = new JSONObject();
-			oneObject.put("id", roleList.get(i).getRoleCode());
-			oneObject.put("text", roleList.get(i).getRoleName());
-			oneObject.put("state", roleList.get(i).getState());
-			menuRoleArray.put(oneObject);
+		HashMap<String, Object> cond = new HashMap<String, Object>();
+		cond.put("staffId", staff.getStaffId());
+		cond.put("roleType", "MENU");
+		List<StaffRole> staffRoleList = staffService.queryStaffRoleByCond(cond);
+		if (staffRoleList.size() > 0) {
+			if (staffRoleList.get(0).getRoleCode().equals("ROLE_MAIN")) {
+				JSONObject oneObject = new JSONObject();
+				oneObject.put("id", "ROLE_STORE");
+				oneObject.put("text", "门店权限");
+				oneObject.put("state", "1");
+				menuRoleArray.put(oneObject);
+			} else {
+				cond.clear();
+				cond.put("roleType", "MENU");
+				List<Role> roleList = staffService.queryRole(cond);
+				
+				for (int i = 0; i < roleList.size(); i++) {
+					JSONObject oneObject = new JSONObject();
+					oneObject.put("id", roleList.get(i).getRoleCode());
+					oneObject.put("text", roleList.get(i).getRoleName());
+					oneObject.put("state", roleList.get(i).getState());
+					menuRoleArray.put(oneObject);
+				}
+			}
 		}
+		
 		res.setContentType("text/html;charset=UTF-8");
 		res.getWriter().print(menuRoleArray.toString());
 	}

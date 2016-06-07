@@ -27,4 +27,8 @@ public interface MemberCardMapper {
 	void updateMemberCard(HashMap<String, Object> cond);
 	
 	void deleteMemberCard(HashMap<String, Object> cond);
+	
+	List<MemberCard> queryReturnCardByPage(Page page);
+	
+	List<MemberCard> queryReturnCard(HashMap<String, Object> cond);
 }

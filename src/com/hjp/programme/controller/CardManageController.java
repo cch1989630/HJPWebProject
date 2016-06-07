@@ -21,6 +21,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 
 import com.hjp.programme.poi.vo.MemberTypeBalanceExcelPoi;
+import com.hjp.programme.poi.vo.ReturnCardExcelPoi;
 import com.hjp.programme.service.ICardTypeService;
 import com.hjp.programme.service.IMemberCardService;
 import com.hjp.programme.service.IMerchantService;
@@ -33,7 +34,9 @@ import com.hjp.programme.vo.Balance;
 import com.hjp.programme.vo.CardType;
 import com.hjp.programme.vo.MemberCard;
 import com.hjp.programme.vo.MerchantPrinter;
+import com.hjp.programme.vo.ReturnCard;
 import com.hjp.programme.vo.Staff;
+import com.hjp.programme.vo.StaffRole;
 
 
 @Controller(value="CardManageController")
@@ -58,7 +61,25 @@ public class CardManageController {
 	
 	@RequestMapping(value = "/addMemberCard.do", method = {RequestMethod.POST, RequestMethod.GET})
 	public String addMemberCard(HttpServletRequest req, HttpServletResponse res, ModelMap model) throws Exception {
+		UserDetails userDetails = (UserDetails) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+		String userName = userDetails.getUsername();
+		Staff staff = staffService.queryStaffByStaffId(userName);
+		
+		HashMap<String, Object> cond = new HashMap<String, Object>();
+		cond.put("staffId", staff.getStaffId());
+		cond.put("roleType", "MENU");
+		List<StaffRole> staffRoleList = staffService.queryStaffRoleByCond(cond);
+		if (staffRoleList.size() > 0) {
+			model.put("menuRoleCode", staffRoleList.get(0).getRoleCode());
+		} else {
+			model.put("menuRoleCode", "ROLE_STORE");
+		}
 		return "addMemberCard";
+	}
+	
+	@RequestMapping(value = "/returnMemberCard.do", method = {RequestMethod.POST, RequestMethod.GET})
+	public String returnMemberCard(HttpServletRequest req, HttpServletResponse res, ModelMap model) throws Exception {
+		return "returnMemberCard";
 	}
 	
 	@RequestMapping(value = "/cardConsume.do", method = {RequestMethod.POST, RequestMethod.GET})
@@ -85,6 +106,13 @@ public class CardManageController {
 	
 	@RequestMapping(value = "/mainMemberCardType.do", method = {RequestMethod.POST, RequestMethod.GET})
 	public String mainMemberCardType(HttpServletRequest req, HttpServletResponse res, ModelMap model) throws Exception {
+		UserDetails userDetails = (UserDetails) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+		String userName = userDetails.getUsername();
+		Staff staff = staffService.queryStaffByStaffId(userName);
+		model.put("merchantId", staff.getChildMerchantId());
+		model.put("merchantName", staff.getMerchantName());
+		model.put("staffId", staff.getStaffId());
+		
 		return "mainMemberCardType";
 	}
 	
@@ -179,9 +207,21 @@ public class CardManageController {
 		String order = req.getParameter("order");
 		
 		String cardTypeCode = req.getParameter("cardTypeCode");
+		String openBeginTime = req.getParameter("openBeginTime");
+		String openEndTime = req.getParameter("openEndTime");
+		String cardId = req.getParameter("cardId");
 		
 		HashMap<String, Object> con = new HashMap<String, Object>();
 		//con.put("merchantId", staff.getMerchantId());
+		if (cardId != null && !"".equals(cardId)) {
+			con.put("cardId", cardId);
+		}
+		if (openBeginTime != null && !"".equals(openBeginTime)) {
+			con.put("openBeginTime", openBeginTime);
+		}
+		if (openEndTime != null && !"".equals(openEndTime)) {
+			con.put("openEndTime", openEndTime);
+		}
 		if (cardTypeCode != null && !"".equals(cardTypeCode)) {
 			con.put("cardTypeCode", cardTypeCode);
 		}
@@ -216,16 +256,84 @@ public class CardManageController {
 		res.getWriter().print(returnJson.toString());
 	}
 	
+	/**
+	 * 展示退卡界面数据
+	 * @param req
+	 * @param res
+	 * @param model
+	 * @throws Exception
+	 */
+	@RequestMapping(value = "/queryReturnCard.do", method = {RequestMethod.POST, RequestMethod.GET})
+	public void queryReturnCard(HttpServletRequest req, HttpServletResponse res, ModelMap model) throws Exception {
+		
+		String cardId = req.getParameter("cardId");
+		String cardTypeCode = req.getParameter("cardTypeCode");
+		String returnBeginTime = req.getParameter("returnBeginTime");
+		String returnEndTime = req.getParameter("returnEndTime");
+		
+		String pageSize = req.getParameter("rows");
+		String currPage = req.getParameter("page");
+		
+		HashMap<String, Object> con = new HashMap<String, Object>();
+		if (cardId != null && !"".equals(cardId)) {
+			con.put("cardId", cardId);
+		}
+		if (cardTypeCode != null && !"".equals(cardTypeCode)) {
+			con.put("cardTypeCode", cardTypeCode);
+		}
+		if (returnBeginTime != null && !"".equals(returnBeginTime)) {
+			con.put("returnBeginTime", returnBeginTime);
+		}
+		if (returnEndTime != null && !"".equals(returnEndTime)) {
+			con.put("returnEndTime", returnEndTime);
+		}
+		
+		Page page = new Page(Integer.parseInt(currPage), Integer.parseInt(pageSize));
+		page.setT(con);
+		
+		JSONObject returnJson = new JSONObject();
+		JSONArray memberCardArray = new JSONArray();
+		List<MemberCard> memberCardList = memberCardService.queryReturnCardByPage(page);
+		for (int i = 0; i < memberCardList.size(); i++) {
+			JSONObject oneObject = new JSONObject();
+			oneObject.put("cardId", memberCardList.get(i).getCardId());
+			oneObject.put("cardTypeCode", memberCardList.get(i).getCardTypeCode());
+			oneObject.put("hodeCardName", memberCardList.get(i).getHodeCardName());
+			oneObject.put("hodeCardPhone", memberCardList.get(i).getHodeCardPhone());
+			oneObject.put("createTime", DateStringUtils.getStringFromDate(memberCardList.get(i).getCreateTime(), "yyyy-MM-dd HH:mm:ss"));
+			oneObject.put("cardTypeName", memberCardList.get(i).getCardTypeName());
+			oneObject.put("cardBalance", DateStringUtils.getDoubleFormLong(memberCardList.get(i).getCardBalance(), 100, 2));
+			oneObject.put("staffName", memberCardList.get(i).getStaffName());
+			oneObject.put("returnStaffId", memberCardList.get(i).getReturnStaffId());
+			oneObject.put("returnDate", DateStringUtils.getStringFromDate(memberCardList.get(i).getReturnDate(), "yyyy-MM-dd HH:mm:ss"));
+			memberCardArray.put(oneObject);
+		}
+		
+		returnJson.put("total", page.getCountRecord());
+		returnJson.put("rows", memberCardArray);
+		
+		res.setContentType("text/html;charset=UTF-8");
+		res.getWriter().print(returnJson.toString());
+	}
+	
 	@RequestMapping(value = "/exportMainConsumeByType.do", method = {RequestMethod.POST, RequestMethod.GET})
 	public void exportMainConsumeByType(HttpServletRequest req, HttpServletResponse res, ModelMap model) throws Exception {
 		res.setCharacterEncoding("UTF-8");
 		res.setContentType("application/vnd.ms-excel");
-		String fileName = "会员卡分类消费明细";
+		String fileName = "贵宾卡信息明细";
 		res.addHeader("Content-Disposition", "attachment;filename="+ URLEncoder.encode(fileName, "UTF-8") + ".xls");
 		
 		String cardTypeCode = req.getParameter("cardTypeCode");
+		String openBeginTime = req.getParameter("openBeginTime");
+		String openEndTime = req.getParameter("openEndTime");
 		
 		HashMap<String, Object> con = new HashMap<String, Object>();
+		if (openBeginTime != null && !"".equals(openBeginTime)) {
+			con.put("openBeginTime", openBeginTime);
+		}
+		if (openEndTime != null && !"".equals(openEndTime)) {
+			con.put("openEndTime", openEndTime);
+		}
 		if (cardTypeCode != null && !"".equals(cardTypeCode)) {
 			con.put("cardTypeCode", cardTypeCode);
 		}
@@ -241,7 +349,50 @@ public class CardManageController {
 		String[] headers = { "卡号", "持卡人", "持卡人联系方式", "开卡日期", "卡类型", "卡余额"};
 		
 		OutputStream out = res.getOutputStream();
-		ExcelPoiUtil.exportExcel("总部会员卡消费明细",publicMap, headers, memberTypeBalanceExcelPoiList, out);
+		ExcelPoiUtil.exportExcel("贵宾卡信息",publicMap, headers, memberTypeBalanceExcelPoiList, out);
+		out.flush();
+		out.close();
+	}
+	
+	@RequestMapping(value = "/exportReturnCard.do", method = {RequestMethod.POST, RequestMethod.GET})
+	public void exportReturnCard(HttpServletRequest req, HttpServletResponse res, ModelMap model) throws Exception {
+		res.setCharacterEncoding("UTF-8");
+		res.setContentType("application/vnd.ms-excel");
+		String fileName = "退卡信息明细";
+		res.addHeader("Content-Disposition", "attachment;filename="+ URLEncoder.encode(fileName, "UTF-8") + ".xls");
+		
+		String cardId = req.getParameter("cardId");
+		String cardTypeCode = req.getParameter("cardTypeCode");
+		String returnBeginTime = req.getParameter("returnBeginTime");
+		String returnEndTime = req.getParameter("returnEndTime");
+		
+		HashMap<String, Object> con = new HashMap<String, Object>();
+		if (cardId != null && !"".equals(cardId)) {
+			con.put("cardId", cardId);
+		}
+		if (cardTypeCode != null && !"".equals(cardTypeCode)) {
+			con.put("cardTypeCode", cardTypeCode);
+		}
+		if (returnBeginTime != null && !"".equals(returnBeginTime)) {
+			con.put("returnBeginTime", returnBeginTime);
+		}
+		if (returnEndTime != null && !"".equals(returnEndTime)) {
+			con.put("returnEndTime", returnEndTime);
+		}
+		List<MemberCard> memberCardList = memberCardService.queryReturnCard(con);
+		List<ReturnCardExcelPoi> returnCardExcelPoiList = new ArrayList<ReturnCardExcelPoi>();
+		for (int i = 0; i < memberCardList.size(); i++) {
+			returnCardExcelPoiList.add(new ReturnCardExcelPoi(memberCardList.get(i).getCardId(), 
+					memberCardList.get(i).getCardTypeName(), memberCardList.get(i).getHodeCardPhone(), 
+					memberCardList.get(i).getCreateTime(), memberCardList.get(i).getReturnDate(),
+					memberCardList.get(i).getStaffName(),
+					DateStringUtils.getDoubleFormLong(memberCardList.get(i).getCardBalance(),100,2)));
+		}
+		Map<String, String> publicMap = new HashMap<String, String>();
+		String[] headers = { "卡号", "卡类型", "持卡人联系方式", "开卡日期", "退卡日期", "退卡操作员", "卡余额"};
+		
+		OutputStream out = res.getOutputStream();
+		ExcelPoiUtil.exportExcel("退卡信息",publicMap, headers, returnCardExcelPoiList, out);
 		out.flush();
 		out.close();
 	}
@@ -409,6 +560,24 @@ public class CardManageController {
 		memberCard.setCardId(json.getString("cardId"));
 		memberCard.setCardBalance((long)DateStringUtils.mul(json.getDouble("cost"), 100.0));
 		memberCardService.checkOutByMemberCard(balance, memberCard);
+		
+		return returnJson;
+	}
+	
+	/**
+	 * 退卡，余额清零
+	 * @param json
+	 * @return
+	 * @throws Exception
+	 */
+	public JSONObject returnMemberCard(JSONObject json) throws Exception {
+		JSONObject returnJson = new JSONObject();
+		ReturnCard returnCard = new ReturnCard();
+		returnCard.setCardId(json.getString("cardId"));
+		returnCard.setReturnDate(DateStringUtils.getDateFromString(json.getString("returnTime"), "yyyy-MM-dd HH:mm:ss"));
+		returnCard.setMerchantId(json.getString("merchantId"));
+		returnCard.setReturnStaffId(json.getString("staffId"));
+		memberCardService.returnMemberCard(returnCard);
 		
 		return returnJson;
 	}

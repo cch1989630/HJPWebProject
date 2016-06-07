@@ -231,6 +231,7 @@ public class BalanceController {
 			oneObject.put("editStaffName", memberCardList.get(i).getEditStaffName());
 			oneObject.put("editStaffId", memberCardList.get(i).getEditStaffId());
 			oneObject.put("isMonth", memberCardList.get(i).getIsMonth());
+			oneObject.put("balanceMerchantId", memberCardList.get(i).getBalanceMerchantId());
 			if (memberCardList.get(i).getIsMonth().equals("1")) {
 				oneObject.put("isMonthName", "未月结");
 			} else {
@@ -419,7 +420,8 @@ public class BalanceController {
 		
 		List<MainMemberBalanceExcelPoi> mainMemberBalanceExcelPoiList = new ArrayList<MainMemberBalanceExcelPoi>();
 		for (int i = 0; i < memberCardList.size(); i++) {
-			mainMemberBalanceExcelPoiList.add(new MainMemberBalanceExcelPoi(memberCardList.get(i).getCardId(), memberCardList.get(i).getHodeCardName(),memberCardList.get(i).getHodeCardPhone(),
+			mainMemberBalanceExcelPoiList.add(new MainMemberBalanceExcelPoi(memberCardList.get(i).getCardId(), memberCardList.get(i).getHodeCardName(), 
+					memberCardList.get(i).getBalanceMerchantId(),memberCardList.get(i).getHodeCardPhone(),
 					memberCardList.get(i).getCreateTime(), memberCardList.get(i).getCardTypeName(),
 					memberCardList.get(i).getMerchantName(), memberCardList.get(i).getStaffName(),
 					memberCardList.get(i).getCostTime(), DateStringUtils.getDoubleFormLong(memberCardList.get(i).getCost(), 100, 2), 
@@ -434,7 +436,7 @@ public class BalanceController {
 				publicMap.put("总计", "0");
 			}
 		} 
-		String[] headers = { "卡号", "持卡人", "持卡人联系方式", "开卡日期", "卡类型", "门店", 
+		String[] headers = { "卡号", "持卡人", "消费部门", "持卡人联系方式", "开卡日期", "卡类型", "门店", 
 				"操作员", "消费日期", "消费金额",  "卡余额"};
 		
 		OutputStream out = res.getOutputStream();
