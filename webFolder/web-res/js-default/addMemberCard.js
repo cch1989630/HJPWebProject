@@ -2,7 +2,7 @@ var dataType;
 
 function queryMemberCard() {
 	if($("#fq").form('validate')) {
-		var cardId = $('#cardId').val();
+		var cardId = $('#queryCardId').val();
 		var queryParams = $('#dg').datagrid('options').queryParams;  
 		queryParams.cardId = cardId;
 		$('#dg').datagrid('options').queryParams = queryParams;  

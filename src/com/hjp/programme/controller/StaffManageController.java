@@ -78,6 +78,12 @@ public class StaffManageController {
 		JSONObject returnJson = new JSONObject();
 		JSONArray staffArray = new JSONArray();
 		for (int i = 0; i < staffList.size(); i++) {
+			if (!staff.getStaffId().equals("1000000")) {
+				if (staffList.get(i).getStaffId().equals("1000000")) {
+					continue;
+				}
+			}
+			
 			JSONObject oneObject = new JSONObject();
 			oneObject.put("merchantName", staffList.get(i).getMerchantName());
 			oneObject.put("staffId", staffList.get(i).getStaffId());

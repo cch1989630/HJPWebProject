@@ -235,7 +235,7 @@
 		FROM tf_f_member_card mc, td_m_card_type ct
 		WHERE mc.CARD_TYPE_CODE = ct.CARD_TYPE_CODE
 		<if test="t.cardId != null" >
-			AND mc.CARD_ID = #{cardId,jdbcType=VARCHAR}
+			AND mc.CARD_ID = #{t.cardId,jdbcType=VARCHAR}
 		</if>
 		<if test="t.cardTypeCode != null" >
 			AND mc.CARD_TYPE_CODE = #{t.cardTypeCode,jdbcType=VARCHAR}

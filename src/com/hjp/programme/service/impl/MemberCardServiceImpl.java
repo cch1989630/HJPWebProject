@@ -99,6 +99,10 @@ public class MemberCardServiceImpl implements IMemberCardService {
 		}
 		
 		try {
+			cond.put("merchantId", memberCard.getMerchantId());
+			returnCardMapper.deleteReturnCard(cond);
+			
+			cond.clear();
 			cond.put("cardId", newCardId);
 			cond.put("hodeCardName", memberCard.getHodeCardName());
 			cond.put("cardTypeCode", memberCard.getCardTypeCode());
@@ -118,7 +122,7 @@ public class MemberCardServiceImpl implements IMemberCardService {
 		cond.put("cardId", memberCard.getCardId());
 		List<Balance> balanceList = balanceMapper.queryBalanceInfo(cond);
 		if (balanceList.size() > 0) {
-			throw new CCHException("0", "该贵宾卡存在消费记录，不可修改！");
+			throw new CCHException("0", "该贵宾卡存在消费记录，不可删除！");
 		}
 		
 		try {

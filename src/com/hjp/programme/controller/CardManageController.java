@@ -453,6 +453,7 @@ public class CardManageController {
 		memberCard.setHodeCardName(json.getString("hodeCardName"));
 		memberCard.setHodeCardPhone(json.getString("hodeCardPhone"));
 		memberCard.setCardBalance((long)DateStringUtils.mul(json.getDouble("cardBalance"), 100.0));
+		memberCard.setMerchantId(json.getString("merchantId"));
 
 		String newCardId = json.getString("newCardId");
 		memberCardService.updateMemberCard(memberCard, newCardId);

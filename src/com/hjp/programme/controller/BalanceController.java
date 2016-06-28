@@ -87,7 +87,7 @@ public class BalanceController {
 	 * @throws Exception
 	 */
 	@RequestMapping(value = "/queryChildMerchantBalance.do", method = {RequestMethod.POST, RequestMethod.GET})
-	public void queryStaffInfo(HttpServletRequest req, HttpServletResponse res, ModelMap model) throws Exception {
+	public void queryChildMerchantBalance(HttpServletRequest req, HttpServletResponse res, ModelMap model) throws Exception {
 		UserDetails userDetails = (UserDetails) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
 		String userName = userDetails.getUsername();
 		Staff staff = staffService.queryStaffByStaffId(userName);
