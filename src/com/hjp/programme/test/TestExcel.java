@@ -9,6 +9,7 @@ import java.io.FileInputStream;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.io.InputStream;
+import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -21,7 +22,6 @@ import org.apache.poi.ss.usermodel.FormulaEvaluator;
 import org.apache.poi.ss.usermodel.Row;
 import org.apache.poi.ss.usermodel.Sheet;
 import org.apache.poi.ss.usermodel.Workbook;
-import org.apache.poi.xssf.eventusermodel.examples.FromHowTo;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 
 import com.hjp.programme.util.DateStringUtils;
@@ -47,7 +47,7 @@ public abstract class TestExcel {
 	/**
 	 * 分隔符
 	 */
-	private final static String SEPARATOR = ",";
+	private final static String SEPARATOR = "@";
 
 	/**
 	 * 由Excel文件的Sheet导出至List
@@ -151,16 +151,6 @@ public abstract class TestExcel {
 		return list;
 	}
 	
-	public static void main(String[] args) throws Exception {
-		String path = "D:/CCH_WORK/Github/HJPWebProject/import1.xls";  
-        List<String> list = null;  
-        try {  
-            list = exportListFromExcel(new File(path), 0);  
-            merchantCard(list);
-        } catch (IOException e) {  
-        }
-	}
-	
 	public static void updateMerchantCard(List<String> list) throws Exception {
 		FileWriter fileWriter=new FileWriter("D:\\Result.txt");
 		 for (int i = 1; i < list.size(); i++) {
@@ -261,5 +251,36 @@ public abstract class TestExcel {
 		}
 		fileWriter.flush();
 		fileWriter.close();
+	}
+	
+	public static void qcAdd(List<String> list) throws Exception {
+		FileWriter fileWriter=new FileWriter("D:\\Result.txt");
+		Long id = 10001093l;
+		 for (int i = 0; i < list.size(); i++) {
+         	String sqlString = "INSERT INTO tf_m_qc VALUES (";
+				String listString = list.get(i);
+				System.out.println(listString);
+				String[] stringArray = listString.split("@");
+				sqlString = sqlString + id + ",'" + stringArray[2] +"','";
+				BigDecimal bigDecimal = new BigDecimal(stringArray[4]);
+				String result = bigDecimal.toString();
+				sqlString = sqlString + result + "','";
+				sqlString = sqlString + stringArray[1] + "','" + stringArray[3] + "','" + id + ".jpg'," + "1," + "now(),now());" + "\n"; 
+				System.out.println(sqlString);
+				fileWriter.write(sqlString);
+				id = id + 1;
+		}
+		fileWriter.flush();
+		fileWriter.close();
+	}
+	
+	public static void main(String[] args) throws Exception {
+		String path = "D:/非食材3类.xls";  
+        List<String> list = null;  
+        try {  
+            list = exportListFromExcel(new File(path), 0);  
+            qcAdd(list);
+        } catch (IOException e) {  
+        }
 	}
 }

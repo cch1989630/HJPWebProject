@@ -79,7 +79,7 @@ public class AjaxSubmitController {
 				InvocationTargetException targerException = (InvocationTargetException) e;
 				if (targerException.getTargetException() instanceof CCHException) {
 					//提示信息不需要前台抛出
-					e.printStackTrace();
+					//e.printStackTrace();
 					CCHException cchException = (CCHException) targerException.getTargetException();
 					res.setStatus(500);
 					res.getWriter().print(cchException.getExceptionMessage());
@@ -87,7 +87,7 @@ public class AjaxSubmitController {
 					/*系统出错，应该是代码问题，不能直接把错误抛给用户
 					 * 需要用日志把错误记录下来，方便查看
 					*/
-					e.printStackTrace();
+					//e.printStackTrace();
 					res.setStatus(500);
 					res.getWriter().print("系统出错，工程师马上到！请稍后");
 				}
@@ -95,7 +95,7 @@ public class AjaxSubmitController {
 				/*系统出错，应该是代码问题，不能直接把错误抛给用户
 				 * 需要用日志把错误记录下来，方便查看
 				*/
-				e.printStackTrace();
+				//e.printStackTrace();
 				res.setStatus(500);
 				res.getWriter().print("系统出错，工程师马上到！请稍后");
 			}

@@ -32,7 +32,6 @@ import com.hjp.programme.util.DateStringUtils;
 import com.hjp.programme.util.ExcelPoiUtil;
 import com.hjp.programme.util.Page;
 import com.hjp.programme.vo.Balance;
-import com.hjp.programme.vo.CardType;
 import com.hjp.programme.vo.MemberCard;
 import com.hjp.programme.vo.MerchantPrinter;
 import com.hjp.programme.vo.Staff;
